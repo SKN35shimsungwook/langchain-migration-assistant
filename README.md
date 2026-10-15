@@ -12,14 +12,15 @@
 ![Chroma](https://img.shields.io/badge/Chroma-Cloud-F2A33A)
 ![검사](https://img.shields.io/badge/자동_점검-19%2F19-2EA44F)
 ![질문](https://img.shields.io/badge/평가_질문-36%2F36_검사-2EA44F)
+![비교](https://img.shields.io/badge/일반_LLM_대비-0%25→57%25-1F5FAE)
+![자체평가](https://img.shields.io/badge/자체_평가-83.3점_B-2EA44F)
 
-[**배포 화면**]([배포 주소]) · [구조](#3-시스템-구조) · [화면 · DB](#4-화면과-대화-기록-4번) · [평가](#5-평가-방법) · [결과](#6-결과) · [실행](#9-실행-방법) · [팀 저장소](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-4Team)
+[**배포 화면**](https://langchain-migration-assistant-btn5chcr8ragnwts68rmhf.streamlit.app) · [구조](#3-시스템-구조) · [화면 · DB](#4-화면과-대화-기록-4번) · [평가](#5-평가-방법) · [결과](#6-결과) · [실행](#9-실행-방법) · [팀 저장소](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-4Team)
 
 </div>
 
-<!-- 데모 GIF 자리: 화면에서 확인용 예제를 보내 결과 패널이 나오는 15초 녹화를 docs/images/demo.gif 로 넣고 아래 주석을 풀어 주세요
-<p align="center"><img src="docs/images/demo.gif" width="860" alt="확인용 예제를 보내면 근거 ID가 붙은 변환 결과가 나오는 화면"></p>
--->
+<p align="center"><img src="docs/images/langchain-migration-assistant-screen.jpg" width="860" alt="확인용 예제(LLMChain → LCEL)를 보내면 검증 통과 배지와 전후 비교가 나오는 결과 화면"></p>
+<p align="center"><sub>실제 화면 (2026-10-15) · 확인용 예제를 보내면 2회차에 검증 통과, 0.0.300 ~ 0.3.30 → 1.4.5, 바뀐 줄을 빨강 · 초록으로 비교</sub></p>
 
 > **문서 근거**(import · 메서드 대응표, 최신 공식 문서 검색)로 고치고, **검사 근거**(verifier 11가지, LLM 없이)로 확인합니다.
 > 검사에 실패하면 실패 이유를 들고 근거를 다시 찾아 최대 3번 고칩니다. 바뀐 줄마다 근거 ID가 붙습니다.
@@ -30,7 +31,7 @@
 | 팀 | SKN35 3rd 4Team |
 | 발표 | 2026-10-15 |
 | 팀 저장소 | [SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-4Team](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-4Team) |
-| 이 저장소 | 팀 저장소 `sungwook` 브랜치를 옮긴 **배포용** 저장소 (Streamlit Community Cloud) |
+| 이 저장소 | 팀 저장소 `sungwook` 브랜치를 옮긴 **배포용** 저장소 (Streamlit Community Cloud) · [배포 화면](https://langchain-migration-assistant-btn5chcr8ragnwts68rmhf.streamlit.app) |
 
 ## 진행 상황 (2026-10-15 발표 당일 기준)
 
@@ -41,8 +42,9 @@
 | 질문 분류 (1번) | 최상위 그래프 `supervisor()`: 코드 변환(migration) · LangChain 질문(search) · 일반 질문(general) | ✅ 동작 · 화면 연결 |
 | 변환 · 검증 (3번) | rewriter(근거 ID · 이유), verifier 11가지 검사 | ✅ 동작 |
 | 화면 · DB (4번) | 로그인 · 세션 저장 · 진행 단계 실시간 표시 · 결과 패널(전후 비교 · 변경 사항 · 근거 · 검사 결과 · 코드 받기) · 다시 시도 · 확인용 예제 30개, TiDB 저장 | ✅ 최상위 그래프 연결, 자동 점검 19/19 |
-| 평가 (4번) | 질문 36개 (1.x로 올리기 30 + 버전 오가기 6), 질문 세트 검사 36/36 | ✅ 준비 완료 |
-| 비교 실험 | 일반 LLM vs 우리 챗봇, 질문 30개 | ⏳ 결과 입력 전 |
+| 평가 (4번) | 질문 36개 + 분류 확인 14개, 실행(`eval/run_eval.py`) · 채점(`eval/score.py`, LLM 없이) 도구 | ✅ 완료 |
+| 비교 실험 | 같은 gpt-4o-mini로 공통 기준 통과 **일반 LLM 0% → 우리 챗봇 57%** (실행 기준 0% → 87%) | ✅ 2026-10-15 |
+| 자체 평가 | 팀 규칙 21항목 **83.3점 (B)**, 약점 7개 · 개선 순서 정리 → [docs/평가_결과와_개선방안.md](docs/평가_결과와_개선방안.md) | ✅ 2026-10-15 |
 
 ---
 
@@ -130,15 +132,17 @@ erDiagram
 
 ## 5. 평가 방법
 
-같은 질문 30개를 **일반 LLM**과 **우리 챗봇**에 넣고, verifier와 같은 기준으로 채점해 비교합니다.
+같은 질문 30개를 **일반 LLM**과 **우리 챗봇**에 넣고 **LLM 없이 코드로** 채점해 비교하고(비교 평가), 팀이 정한 규칙대로 동작하는지 따로 점검합니다(자체 평가).
 
 | 유형 (각 3개) | 쉬움 | 중간 | 어려움 |
 |---|---|---|---|
 | import 경로 · 문서 로더 · 임베딩 · LLMChain → LCEL · 체인 조합 · RAG · 메모리 · 에이전트 · 출력 파서 · 실무 상황 | 7 | 15 | 8 |
 
 - **질문**: 실제 사용자처럼 "요청 문장 + 옛 코드". 30개 모두 옛 코드가 1.x에서 깨지고 기대 import가 1.x에서 되는지 미리 확인 (36/36, 버전 오가기 6개 포함)
-- **공정성**: 같은 [모델명], temperature 0, 같은 입력, 같은 채점 기준. 우리 챗봇만 최대 3회
-- **지표**: 검증 통과율 · 근거 포함률(근거 ID가 붙은 바뀐 줄 비율) · 재시도 효과(최종 − 1회차, %p)
+- **공정성**: 양쪽 같은 gpt-4o-mini, temperature 0, 같은 입력. 일반 LLM은 시스템 프롬프트 없이 (ChatGPT에 붙여 넣는 상황). 우리 챗봇만 최대 3회
+- **공통 채점 8항목** (두 답에 같은 잣대): 문법 · 옛 import 없음 · import 실제 존재(1.x 도구 목록) · 정의 안 된 이름 없음 · 결과값 보존 · 남은 import 없음 · 정답 import 포함 · 실제로 바꿈 → 8개 모두 통과해야 '공통 기준 통과'
+- **자체 평가 21항목 (100점)**: 질문 분류 · 분석 · 근거 검색 · 고쳐 쓰기 규칙 · 검증 루프 · 답변 규칙 · 안정성 (팀 프롬프트 · 코드에 적힌 규칙 그대로)
+- 실행: `python eval/run_eval.py` → 채점: `python eval/score.py` (자세히: [eval/README.md](eval/README.md))
 
 ## 6. 결과
 
@@ -155,14 +159,33 @@ print(chain.run(word='크다'))                       print(chain.invoke({'word'
 
 바뀐 6줄 모두 근거 ID(`imap-…`, `mmap-…`, `doc-…`) · 못 바꾼 줄 0 · 한 번 변환에 약 1분
 
-**비교 실험** ⏳ 결과 입력 전
+**비교 실험** (2026-10-15, 1.x로 올리기 30개, gpt-4o-mini)
 
-| 시스템 | 검증 통과율 | 쉬움 | 중간 | 어려움 | 근거 포함률 |
-|---|---|---|---|---|---|
-| 우리 챗봇 | [__]% | [__]% | [__]% | [__]% | [__]% |
-| 일반 LLM | [__]% | [__]% | [__]% | [__]% | - |
+| 항목 | 우리 챗봇 | 일반 LLM |
+|---|---|---|
+| **공통 기준 통과 (8개 모두)** | **57%** | **0%** |
+| 실행 기준 통과 (정답 import 제외) | 87% | 0% |
+| 옛 import 없음 | 93% | 3% |
+| import가 1.x에 실제로 있음 | 90% | 3% |
+| 정답 import 포함 | 60% | 0% |
+| 난이도별 (쉬움 · 중간 · 어려움) | 100% · 53% · 25% | 0% · 0% · 0% |
+| 응답 시간 (중앙값) | 11.6초 | 3.5초 |
 
-- 1회차 [__]% → 최종 [__]% · **재시도 효과 +[__]%p**
+- 일반 LLM은 30개 중 29개에서 옛 import를 그대로 두고 "1.x에 맞게 수정했다"고 답했습니다 (버전 지체 환각 재현)
+- 검증 통과: 1회차 43% → 최종 53% · **재시도 효과 +10%p** · 통과한 답 평균 1.2회 · 바뀐 줄의 **93%에 근거 ID**
+- 통과 못 한 답은 화면에 '검증 실패'와 이유를 표시 (일반 LLM은 실패를 알리지 않음)
+- 버전 오가기 6개(참고): 목표 버전 읽기 100%, 정답 import 0% → 검사기를 목표 버전 기준으로 바꾸는 것이 다음 단계
+
+**자체 평가** 83.3점 / 100 (B) · 21항목 중 13항목 목표 달성
+
+| 영역 | 점수 | | 영역 | 점수 |
+|---|---|---|---|---|
+| 분석 | 9.8 / 10 | | 질문 분류 | 14.0 / 15 |
+| 근거 검색 | 9.9 / 10 | | 고쳐 쓰기 | 22.3 / 25 |
+| 답변 규칙 | 5.0 / 5 | | 검증 · 재시도 | 17.3 / 30 |
+| 안정성 · 속도 | 5.0 / 5 | | **합계** | **83.3** |
+
+강점 · 약점 · 개선 방안 · 프로젝트 의의: [docs/평가_결과와_개선방안.md](docs/평가_결과와_개선방안.md)
 
 **화면 · 데이터 점검**: 화면 · DB 자동 점검 **19/19** · 질문 세트 검사 **36/36** · TiDB 저장 · 아이디 중복 검사 확인
 
@@ -171,75 +194,72 @@ print(chain.run(word='크다'))                       print(chain.invoke({'word'
 - **`langchain-community`는 import만 해도 지원 종료 경고를 냅니다.** 지금 통과해도 곧 깨질 수 있습니다.
 - **`langchain_classic`으로 우회하면 옛 체인도 import됩니다.** 최신 방식(LCEL)은 아니므로 대응표 · 화면에 "옛 창고(classic)"로 따로 표시합니다.
 - **옛 버전끼리는 거의 그대로입니다.** 0.0.300 ~ 0.3.30 사이에는 자주 쓰는 import 경로가 거의 같고, 크게 바뀌는 것은 1.x와의 사이입니다. (버전별 도구 목록 23개 비교)
+- **실험이 알려 준 약점 (2026-10-15)**: ① 고쳐 달라면서 에러 이유도 물으면 설명만 하고 끝남 (30개 중 6개) ② 실패 원인 1위는 '기록 없는 변경'(환각) — 검사기가 모두 막아 '통과'로 나간 적은 없음 ③ 검사기가 `result["text"]` 꺼내기와, 0.x 되돌리기를 1.x 기준으로 검사하는 빈틈 ④ 최신 방식 대신 `langchain_classic` 우회 3개
 
 ## 8. 한계와 다음 단계
 
-| 한계 | 다음 단계 |
+| 우선 | 다음 단계 (평가로 정한 순서) | 담당 (제안) |
+|---|---|---|
+| ① | 고쳐 달라는 말이 있으면 설명 요청이 섞여도 코드 변환으로 분류, classifier temperature 0 | 1번 |
+| ② | rewriter에 '없던 줄 금지' 명시, 환각을 만든 근거는 다음 시도에서 제외, 근거 ID 필수 | 3번 · 1번 |
+| ③ | verifier를 목표 버전별 도구 목록으로 검사, `['text']` 꺼내기 검사 확장, 가짜 LLM 실행 테스트 | 3번 · 2번 |
+| ④ | 대안 사용법 문서를 함께 검색해 classic 우회 줄이기 | 2번 · 3번 |
+
+| 한계 | |
 |---|---|
-| 11가지 코드 검사까지 하지만, 바뀐 코드의 실제 실행 결과는 확인하지 않음 | 가짜 LLM을 넣어 코드 전체 실행 테스트 |
-| 옛 버전으로 되돌리기는 아직 검사 통과율이 낮음, 상관없는 문서 예시를 베끼는 경우가 있음 (검사기가 '기록 없는 변경'으로 잡아냄) | 다시 쓰기 규칙 강화, 틀린 근거를 다음 시도에서 빼기, 상관없는 문서 걸러내기 |
-| 검사 · 재시도로 한 번 변환에 약 1분 | 진행 단계 표시, 쉬운 import는 대응표만으로 바로 답하기 |
+| 질문마다 1회 실행 · 코드는 정적으로 확인 (실제 실행 결과는 미확인) | 반복 실행 · 실행 테스트 추가 |
+| 질문 30개는 팀이 직접 구축 · 버전 오가기 6개는 표본이 작음 | 실사용 코드 · 버전 이동 질문 확장 |
+| 검사 · 재시도로 변환 중앙값 11.6초 (다시 시도 시 30초 안팎) | 진행 단계 실시간 표시 (적용) |
 | 다시 연 대화는 질문 · 답만 (ERD에 결과 열 없음) | 필요하면 결과 열 추가를 팀과 협의 |
-| 질문 30개 · LangChain만 대상 | 실사용 코드로 확장, 다른 라이브러리로 확장 |
 
 ## 9. 실행 방법
 
-### 9-0. AI 에이전트에게 맡기기
+Windows PowerShell 5.1은 `&&`를 쓸 수 없으니 **한 줄씩** 실행합니다.
 
-Claude Code 같은 코딩 에이전트에 아래 글을 그대로 붙여 넣으면 설치부터 실행까지 해 줍니다. (비밀 값은 직접 넣으세요)
+```powershell
+git clone -b dev https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN35-3rd-4Team.git
+```
+
+```powershell
+cd SKN35-3rd-4Team
+```
+
+```powershell
+uv sync
+```
+
+```powershell
+uv pip install -r requirements.txt
+```
+
+`.env`에 비밀 값을 넣습니다 (Git에 올리지 않음).
 
 ```text
-https://github.com/SKN35shimsungwook/langchain-migration-assistant 를 내려받아서
-README의 "9-1. 내 컴퓨터" 순서대로 설치하고 streamlit_app.py 를 실행해 줘.
-.env 는 만들기만 하고 값은 비워 둬. 내가 직접 넣을게.
-실행되면 사이드바의 연결 상태 배지 두 개를 알려 줘.
-```
-
-### 9-1. 내 컴퓨터
-
-```bash
-pip install -r requirements.txt
-```
-
-```bash
-streamlit run streamlit_app.py
-```
-
-`.env`(또는 `.streamlit/secrets.toml`)에 비밀 값을 넣습니다. 둘 다 Git에 올라가지 않습니다.
-
-```text
-OPENAI_API_KEY=...        # analyzer · rewriter
-CHROMA_API_KEY=...        # retriever (Chroma Cloud)
+OPENAI_API_KEY=...
+CHROMA_API_KEY=...
 CHROMA_TENANT=...
 CHROMA_DATABASE=...
-TIDB_HOST=...             # 대화 기록 (없으면 로컬 SQLite)
+TIDB_HOST=...
 TIDB_PORT=4000
 TIDB_USER=...
 TIDB_PASSWORD=...
 TIDB_DATABASE=langchain_db
 ```
 
-| 값 | 없으면 |
+| 실행 | 명령 |
 |---|---|
-| `OPENAI_API_KEY`, `CHROMA_*` | 팀 그래프 대신 화면 쪽 임시 결과 (사이드바에 이유 표시) |
-| TiDB | 로컬 SQLite에 저장 (사이드바에 이유 표시) |
-
-### 9-2. 배포 (Streamlit Community Cloud)
-
-1. share.streamlit.io → **Create app** → 이 저장소, 브랜치 `main`, Main file path `streamlit_app.py`
-2. **Advanced settings** → Python **3.12**, **Secrets**에 [`.streamlit/secrets.toml.example`](.streamlit/secrets.toml.example) 형식으로 값 넣기 (`키 = "값"`, 키 4줄은 `[tidb]`보다 위에)
-3. **Deploy** → 사이드바에 "변환: 팀 챗봇", "기록: TiDB"가 나오면 연결 성공
-
-`requirements.txt`만 쓰도록 `uv.lock`은 넣지 않았습니다 (Streamlit Cloud는 `uv.lock`이 있으면 그걸 먼저 써서 화면 패키지가 빠짐).
+| 화면 (4번) | `uv run streamlit run streamlit_app.py` |
+| 그래프 시험 (1번) | `uv run python app.py` |
+| 노드별 시험 (3번) | `uv run python check_nodes.py` |
 
 ### 점검 재현
 
 ```bash
-python tools/bot_check.py
+uv run python tools/bot_check.py
 ```
 
 ```bash
-python eval/check_questions.py --py <LangChain 1.x python> --map data/processed/import_map.jsonl --symbols data/raw/symbols
+uv run python eval/check_questions.py --py <LangChain 1.x python> --map data/processed/import_map.jsonl --symbols data/raw/symbols
 ```
 
 `bot_check.py`는 임시 SQLite로 화면을 실행해 19가지를 확인합니다(TiDB · 유료 API 사용 안 함). 마지막 줄 `19/19 통과`가 정상입니다.
@@ -264,10 +284,10 @@ python eval/check_questions.py --py <LangChain 1.x python> --map data/processed/
 
 | 문서 | 내용 |
 |---|---|
-| [docs/화면_실행방법.md](docs/화면_실행방법.md) | 화면 실행 · 비밀 값 · 자동 점검 · 자주 나는 문제 |
-| [docs/DB_설계.md](docs/DB_설계.md) | ERD (users, chat_history), 화면이 DB를 쓰는 방법, 이전 설계 |
-| [eval/README.md](eval/README.md) | 평가 질문 36개 구성과 검사 방법 |
-| [docs/머지_가이드.md](docs/머지_가이드.md) | 팀 저장소와 겹치는 파일, 가져갈 기능 · 뺄 기능 |
+| [docs/화면_실행방법.md](화면_실행방법.md) | 화면 실행 · 비밀 값 · 자동 점검 · 자주 나는 문제 |
+| [docs/DB_설계.md](DB_설계.md) | ERD (users, chat_history), 화면이 DB를 쓰는 방법, 이전 설계 |
+| [eval/README.md](../eval/README.md) | 평가 질문 36개 구성과 검사 방법 |
+| [docs/머지_가이드.md](머지_가이드.md) | 팀 저장소와 겹치는 파일, 가져갈 기능 · 뺄 기능 |
 | 발표 자료 · 테스트 계획 및 결과 보고서 | 발표 당일 제출본 (PPT · PDF) |
 
 ## 12. 팀
