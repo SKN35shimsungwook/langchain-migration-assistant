@@ -44,9 +44,10 @@ APP_NAME = "LangChain 버전 마이그레이션 코드 어시스턴트"
 AUTO = "자동 감지"
 KIND_LABEL = {"native": "최신 위치", "moved": "위치 이동", "same": "그대로", "classic_fallback": "옛 창고(classic)",
               "unresolved": "못 찾음", "deprecated": "옛 메서드", "removed": "없어진 메서드", "exists": "그대로"}
-# 확인용 예제: 평가 질문 중 1.x 로 올리는 30개 (팀 그래프가 지원하는 방향)
-EXAMPLES = [q for q in json.loads((Path(__file__).parent / "eval" / "questions.json").read_text(encoding="utf-8"))
-            if q["target_version"] == "1.x" and q["type"] != "버전 오가기"]
+# 확인용 예제: 평가 질문 중 1.x 로 올리는 30개 (팀 그래프가 지원하는 방향). 파일이 없으면 예제 칸을 숨긴다
+_EXAMPLE_FILE = Path(__file__).parent / "eval" / "questions.json"
+EXAMPLES = ([q for q in json.loads(_EXAMPLE_FILE.read_text(encoding="utf-8"))
+             if q["target_version"] == "1.x" and q["type"] != "버전 오가기"] if _EXAMPLE_FILE.exists() else [])
 ORDER = ALL_WITH_NEW
 USER_ID_RULE = re.compile(r"^[0-9A-Za-z가-힣_]{2,20}$")
 
@@ -185,14 +186,15 @@ def sidebar() -> None:
     with st.sidebar:
         st.markdown(f"### {APP_NAME}")
         st.button("새 대화", icon=":material/edit_square:", width="stretch", on_click=new_chat)
-        with st.expander(f"확인용 예제 ({len(EXAMPLES)}개)", icon=":material/science:"):
-            st.selectbox("예제 고르기", [q["id"] for q in EXAMPLES], key="example_pick",
-                         format_func=lambda i: next(f"{q['id']} · {q['type']} · {q['difficulty']}" for q in EXAMPLES
-                                                    if q["id"] == i))
-            pick = next(q for q in EXAMPLES if q["id"] == ss.get("example_pick", EXAMPLES[0]["id"]))
-            st.caption(f"{pick['request']} (지금 코드 {pick['source_version']} → 1.x)")
-            st.button("이 예제 보내기", icon=":material/send:", width="stretch", type="primary",
-                      key="send_example", on_click=send_example)
+        if EXAMPLES:
+            with st.expander(f"확인용 예제 ({len(EXAMPLES)}개)", icon=":material/science:"):
+                st.selectbox("예제 고르기", [q["id"] for q in EXAMPLES], key="example_pick",
+                             format_func=lambda i: next(f"{q['id']} · {q['type']} · {q['difficulty']}" for q in EXAMPLES
+                                                        if q["id"] == i))
+                pick = next(q for q in EXAMPLES if q["id"] == ss.get("example_pick", EXAMPLES[0]["id"]))
+                st.caption(f"{pick['request']} (지금 코드 {pick['source_version']} → 1.x)")
+                st.button("이 예제 보내기", icon=":material/send:", width="stretch", type="primary",
+                          key="send_example", on_click=send_example)
         st.caption("내 대화")
         sessions = db.list_sessions(ss["user"]["user_id"])
         if not sessions:
@@ -267,6 +269,7 @@ def show_result(result: dict) -> None:
     notes = result_view.notes_html(result)
     labels = ["전후 비교", f"변경 사항 {len(result['changes'])}", f"근거 {n_ev}", "검사 결과", "코드 받기"]
     labels += ["안내"] if notes else []
+    labels += ["처리 과정"] if result.get("steps") else []
     tabs = st.tabs(labels)
     with tabs[0]:
         st.html(result_view.diff_html(result["original_code"], result["migrated_code"]))
@@ -291,6 +294,39 @@ def show_result(result: dict) -> None:
     if notes:
         with tabs[5]:
             st.html(notes)
+    if result.get("steps"):
+        with tabs[-1]:
+            st.caption("그래프가 실제로 지나간 단계예요. 실패한 회차와 다시 시도한 과정도 그대로 남아요.")
+            show_steps(result["steps"], result.get("seconds"))
+
+
+# ---------------------------------------------------------------- 처리 과정 (진행 표시 · 답 아래 기록 · 결과 탭)
+def show_step(done: str, details=(), sec=None) -> None:
+    """단계 하나: 끝난 일 한 줄 + 세부 내용 (무엇을 찾았고, 어떤 근거로, 왜 실패했는지)."""
+    tail = f"  ·  {sec:.0f}초" if sec is not None else ""
+    st.markdown(f":material/check_circle: **{done}**{tail}")
+    for d in details:
+        st.markdown(f"<div style='margin:-6px 0 2px 28px;font-size:0.86rem;opacity:.8'>· {as_inline(d)}</div>",
+                    unsafe_allow_html=True)
+
+
+def as_inline(text: str) -> str:
+    """세부 내용의 `코드` 부분만 <code>로, 나머지는 HTML 이스케이프."""
+    import html as _html
+    parts = str(text).split("`")
+    return "".join(f"<code>{_html.escape(p)}</code>" if i % 2 else _html.escape(p) for i, p in enumerate(parts))
+
+
+def show_steps(steps: list, seconds=None) -> None:
+    for s in steps:
+        show_step(s["done"], s.get("details") or [], s.get("sec"))
+    if seconds is not None:
+        st.caption(f"전체 {seconds:.0f}초 · {len(steps)}단계")
+
+
+def steps_label(m: dict) -> str:
+    n = len(m.get("steps") or [])
+    return f"처리 과정 보기 · {n}단계" + (f" · {m['seconds']:.0f}초" if m.get("seconds") is not None else "")
 
 
 # ---------------------------------------------------------------- 대화 처리
@@ -303,13 +339,13 @@ def handle(text: str, status=None) -> None:
         ss["session_id"] = db.new_session_id()
     ss["messages"].append({"role": "user", "content": text, "result": None})
 
-    def on_step(done: str, nxt: str) -> None:
+    def on_step(done: str, nxt: str, details=()) -> None:
         if status is not None:
-            st.write(f":material/check: {done}")
-            status.update(label=nxt)
+            show_step(done, details)
+            status.update(label=nxt, expanded=True)      # 제목만 바꾸면 상자가 접혀 세부 내용이 안 보임
 
     code = extract_code(text)
-    result = None
+    result, steps, seconds = None, [], None
     try:
         answer = ask(text, on_step)                  # 팀 그래프 (없으면 None)
     except Exception as e:                           # 그래프 실행 중 오류 → 임시 결과로 계속
@@ -317,6 +353,7 @@ def handle(text: str, status=None) -> None:
         st.toast(f"팀 그래프 오류로 임시 결과를 보여 줘요: {type(e).__name__}", icon=":material/warning:")
     if answer is not None:
         result = answer["result"]
+        steps, seconds = answer.get("steps") or [], answer.get("seconds")
         reply = summary(result) if result else answer["reply"]
         if result:
             result["request"] = text                 # 다시 시도 버튼이 같은 요청을 다시 보냄
@@ -328,7 +365,7 @@ def handle(text: str, status=None) -> None:
         reply = followups.answer(text, ss["messages"][:-1])
     else:
         reply = "옛 LangChain 코드를 붙여 넣어 주세요. 코드가 있어야 바꿔 드릴 수 있어요."
-    ss["messages"].append({"role": "assistant", "content": reply, "result": result})
+    ss["messages"].append({"role": "assistant", "content": reply, "result": result, "steps": steps, "seconds": seconds})
     db.add_turn(ss["user"]["user_id"], ss["session_id"], text, reply)   # 질문 + 답 = chat_history 한 행
     # [선택 기능: followups] 연상 질문 — 시작
     ss["followups"] = followups.followups(text, result) if followups is not None else []
@@ -354,8 +391,12 @@ def chat_screen() -> None:
             if not ss["messages"]:
                 with st.chat_message("assistant"):
                     st.write("옛 LangChain 코드를 붙여 넣거나, LangChain 버전 변화에 대해 물어보세요.")
-            for m in ss["messages"]:
+            last_bot = max((i for i, m in enumerate(ss["messages"]) if m["role"] == "assistant"), default=-1)
+            for i, m in enumerate(ss["messages"]):
                 with st.chat_message(m["role"]):
+                    if m["role"] == "assistant" and m.get("steps"):   # 답 위에 처리 과정 (가장 최근 답은 펼쳐 둠)
+                        with st.expander(steps_label(m), icon=":material/account_tree:", expanded=(i == last_bot)):
+                            show_steps(m["steps"], m.get("seconds"))
                     st.markdown(as_markdown(m["content"]) if m["role"] == "user" else m["content"])
             # [선택 기능: followups] 이어서 물어보기 버튼 — 시작
             if followups is not None and ss["followups"]:
@@ -375,7 +416,7 @@ def chat_screen() -> None:
                 with st.chat_message("assistant"):
                     with st.status("질문 종류를 파악하는 중", expanded=True) as status:
                         handle(text, status)
-                        status.update(label="완료", state="complete", expanded=False)
+                        status.update(label="완료 · 처리 과정은 답 위에 남겨 둬요", state="complete", expanded=True)
                         time.sleep(0.2)
             st.rerun()
     with result_col:
