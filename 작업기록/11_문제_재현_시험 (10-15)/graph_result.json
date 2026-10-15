@@ -1,0 +1,154 @@
+{
+ "target_version": "1.4.5",
+ "original_code": "from langchain.chat_models import ChatOpenAI\nfrom langchain.chains import LLMChain\nfrom langchain.prompts import PromptTemplate\n\nllm = ChatOpenAI(temperature=0)\nchain = LLMChain(llm=llm, prompt=PromptTemplate.from_template('{word}의 반대말은?'))\nprint(chain.run(word='크다'))",
+ "migrated_code": "from langchain_openai import ChatOpenAI\nfrom langchain_core.prompts import PromptTemplate\nfrom langchain_core.output_parsers import StrOutputParser\n\nllm = ChatOpenAI(temperature=0)\nchain = PromptTemplate.from_template('{word}의 반대말은?') | llm | StrOutputParser()\nprint(chain.invoke({'word': '크다'}))",
+ "changes": [
+  {
+   "old": "from langchain.chat_models import ChatOpenAI",
+   "new": "from langchain_openai import ChatOpenAI",
+   "kind": "native",
+   "evidence_id": "imap-02229b7d73",
+   "source": "import_map",
+   "alternative": null,
+   "reason": "구버전 import 경로를 1.x 경로로 변경했습니다.",
+   "real_evidence": true
+  },
+  {
+   "old": "from langchain.chains import LLMChain",
+   "new": "(삭제)",
+   "kind": "classic_fallback",
+   "evidence_id": "imap-41c19d624a",
+   "source": "import_map",
+   "alternative": "RunnableSequence, e.g., `prompt | llm`",
+   "reason": "구버전 import 경로를 langchain_classic 경로로 변경했습니다. (변환 후 쓰지 않아 import 삭제)",
+   "real_evidence": true
+  },
+  {
+   "old": "from langchain.prompts import PromptTemplate",
+   "new": "from langchain_core.prompts import PromptTemplate",
+   "kind": "native",
+   "evidence_id": "imap-8ed4309a81",
+   "source": "import_map",
+   "alternative": null,
+   "reason": "구버전 import 경로를 1.x 경로로 변경했습니다.",
+   "real_evidence": true
+  },
+  {
+   "old": "chain = LLMChain(llm=llm, prompt=PromptTemplate.from_template('{word}의 반대말은?'))",
+   "new": "chain = PromptTemplate.from_template('{word}의 반대말은?') | llm | StrOutputParser()",
+   "kind": "deprecated",
+   "evidence_id": "mmap-246a7c2258, doc-1f037eaf7dfb",
+   "source": "method_map",
+   "alternative": "chain.run(x) returned only the output string. chain.invoke({...}) takes a dict and returns a dict (read the output key, e.g. result['text']), or rebuild the chain with LCEL (prompt | llm | StrOutputParser()) so invoke returns a string.",
+   "reason": "LLMChain을 LCEL로 변경하여 새로운 방식으로 체인을 구성했습니다.",
+   "real_evidence": true
+  },
+  {
+   "old": "print(chain.run(word='크다'))",
+   "new": "print(chain.invoke({'word': '크다'}))",
+   "kind": "deprecated",
+   "evidence_id": "mmap-246a7c2258",
+   "source": "method_map",
+   "alternative": "chain.run(x) returned only the output string. chain.invoke({...}) takes a dict and returns a dict (read the output key, e.g. result['text']), or rebuild the chain with LCEL (prompt | llm | StrOutputParser()) so invoke returns a string.",
+   "reason": "run 메서드를 invoke로 변경했습니다.",
+   "real_evidence": true
+  },
+  {
+   "old": "(새 줄)",
+   "new": "from langchain_core.output_parsers import StrOutputParser",
+   "kind": "native",
+   "evidence_id": "doc-1f037eaf7dfb",
+   "source": "migration_guide",
+   "alternative": null,
+   "reason": "StrOutputParser를 사용하기 위해 import를 추가했습니다.",
+   "real_evidence": true
+  }
+ ],
+ "evidences": [
+  {
+   "evidence_id": "doc-1f037eaf7dfb",
+   "source": "migration_guide",
+   "match": "hybrid",
+   "title": "Migrating from LLMChain",
+   "url": "https://github.com/langchain-ai/langchain/blob/4cf62a51a8849d4baea15071c5b0e10bf7ea31c8/docs/docs/versions/migrating_chains/llm_chain.ipynb",
+   "section": "",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "alternative": null,
+   "import_status": null,
+   "text": "Migrating from LLMChain\n\n# Migrating from LLMChain\n\n[`LLMChain`](https://python.langchain.com/api_reference/langchain/chains/langchain.chains.llm.LLMChain.html) combined a prompt template, LLM, and output parser into a class.\n\nSome advantages of switching to the LCEL implementation are:\n\n- Clarity around contents and parameters. The legacy `LLMChain` contains a default output parser and other options.\n- Easier streaming. `LLMChain` only supports streaming via callbacks.\n- Easier access to raw message outputs if desired. `LLMChain` only exposes these via a parameter or via callback.\n\n## Legacy\n\n```python\nfrom langchain.chains import LLMChain\nfrom langchain_core.prompts import ChatPromptTemplate\nfrom langchain_openai import ChatOpenAI\n\nprompt = ChatPromptTemplate.from_messages(\n    [(\"user\", \"Tell me a {adjective} joke\")],\n)\n\nlegacy_chain = LLMChain(llm=ChatOpenAI(), prompt=prompt)\n\nlegacy_result = legacy_chain({\"adjective\": \"funny\"})\nlegacy_result\n```\n\nNote that `LLMChain` by default returned a `dict` containing both the input and the output from `StrOutputParser`, so to extract the output, you need to access the `\"text\"` key.\n\n```python\nlegacy_result[\"text\"]\n```\n\n## LCEL\n\n```python\nfrom langchain_core.output_parsers import StrOutputParser\nfrom langchain_core.prompts import ChatPromptTemplate\nfrom langchain_openai import ChatOpenAI\n\nprompt = ChatPromptTemplate.from_messages(\n    [(\"user\", \"Tell me a {adjective} joke\")],\n)\n\nchain = prompt | ChatOpenAI() | StrOutputParser()\n\nchain.invoke({\"adjective\": \"funny\"})\n```\n\nIf you'd like to mimic the `dict` packaging of input and output in `LLMChain`, you can use a [`RunnablePassthrough.assign`](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html) like:\n\n```python\nfrom langchain_core.runnables import RunnablePassthrough\n\nouter_chain = RunnablePassthrough().assign(text=chain)\n\nouter_chain.invoke({\"adjective\": \"funny\"})\n```\n\n## Next steps\n\nSee [this tutorial](/docs/tutorials/llm_chain) for more detail on building with prompt templates, LLMs, and output parsers.\n\nCheck out the [LCEL conceptual docs](/docs/concepts/lcel) for more background information."
+  },
+  {
+   "evidence_id": "imap-02229b7d73",
+   "source": "import_map",
+   "match": "exact",
+   "title": null,
+   "url": null,
+   "section": null,
+   "old": "langchain.chat_models.ChatOpenAI",
+   "new": "langchain_openai.ChatOpenAI",
+   "kind": "native",
+   "alternative": null,
+   "import_status": "ok",
+   "text": "Legacy import: from langchain.chat_models import ChatOpenAI\nLangChain 1.x import: from langchain_openai import ChatOpenAI (native)\nDeprecated: since 0.0.10, removal 1.0"
+  },
+  {
+   "evidence_id": "imap-41c19d624a",
+   "source": "import_map",
+   "match": "exact",
+   "title": null,
+   "url": null,
+   "section": null,
+   "old": "langchain.chains.LLMChain",
+   "new": "langchain_classic.chains.LLMChain",
+   "kind": "classic_fallback",
+   "alternative": "RunnableSequence, e.g., `prompt | llm`",
+   "import_status": "ok",
+   "text": "Legacy import: from langchain.chains import LLMChain\nLangChain 1.x import: from langchain_classic.chains import LLMChain (classic_fallback)\nDeprecated: since 0.1.17, removal 2.0.0\nAlternative: RunnableSequence, e.g., `prompt | llm`"
+  },
+  {
+   "evidence_id": "imap-8ed4309a81",
+   "source": "import_map",
+   "match": "exact",
+   "title": null,
+   "url": null,
+   "section": null,
+   "old": "langchain.prompts.PromptTemplate",
+   "new": "langchain_core.prompts.PromptTemplate",
+   "kind": "native",
+   "alternative": null,
+   "import_status": "ok",
+   "text": "Legacy import: from langchain.prompts import PromptTemplate\nLangChain 1.x import: from langchain_core.prompts import PromptTemplate (native)"
+  },
+  {
+   "evidence_id": "mmap-246a7c2258",
+   "source": "method_map",
+   "match": "exact_method",
+   "title": null,
+   "url": null,
+   "section": null,
+   "old": "Chain.run",
+   "new": "invoke",
+   "kind": "deprecated",
+   "alternative": "chain.run(x) returned only the output string. chain.invoke({...}) takes a dict and returns a dict (read the output key, e.g. result['text']), or rebuild the chain with LCEL (prompt | llm | StrOutputParser()) so invoke returns a string.",
+   "import_status": null,
+   "text": "Legacy method call: .run(...) on Chain (langchain.chains.base.Chain)\nLangChain 1.x status: deprecated (still works only in the legacy/classic class)\nReplacement: invoke\nRemoval: 1.0\nNote: chain.run(x) returned only the output string. chain.invoke({...}) takes a dict and returns a dict (read the output key, e.g. result['text']), or rebuild the chain with LCEL (prompt | llm | StrOutputParser()) so invoke returns a string."
+  }
+ ],
+ "verification": {
+  "success": true,
+  "attempts": 3,
+  "message": "3회 만에 검사 통과"
+ },
+ "unresolved": [],
+ "notes": [
+  "StrOutputParser()로 끝나는 체인의 invoke 결과는 이미 문자열이므로 그대로 사용해야 합니다."
+ ],
+ "install_packages": [
+  "langchain-core",
+  "langchain-openai"
+ ],
+ "warnings": [],
+ "mode": "graph"
+}

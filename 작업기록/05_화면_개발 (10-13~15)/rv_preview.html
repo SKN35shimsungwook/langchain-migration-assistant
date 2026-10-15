@@ -1,0 +1,155 @@
+<html><head><meta charset=utf-8></head><body style="font-family:Malgun Gothic;max-width:1100px;margin:20px auto;color:#1d1d1f"><h3>전후 비교</h3>
+<style>
+.rv { font-family: inherit; --add: rgba(46,160,67,.16); --add-b: #2ea043; --del: rgba(248,81,73,.15); --del-b: #f85149;
+      --card: rgba(127,127,127,.07); --line: rgba(127,127,127,.22); --sub: rgba(127,127,127,1); }
+.rv .mono { font-family: Consolas, 'SFMono-Regular', Menlo, monospace; font-size: 13px; }
+.rv .diff { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.rv .pane { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.rv .pane h4 { margin: 0; padding: 8px 12px; font-size: 13px; border-bottom: 1px solid var(--line); background: var(--card); }
+.rv .ln { display: flex; white-space: pre-wrap; word-break: break-all; padding: 1px 10px 1px 0; min-height: 20px; }
+.rv .ln .no { width: 34px; flex: none; text-align: right; padding-right: 10px; color: var(--sub); opacity: .55; user-select: none; }
+.rv .ln.del { background: var(--del); box-shadow: inset 3px 0 var(--del-b); }
+.rv .ln.add { background: var(--add); box-shadow: inset 3px 0 var(--add-b); }
+.rv .legend { display: flex; gap: 14px; font-size: 12.5px; color: var(--sub); margin: 8px 2px 0; }
+.rv .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.rv .card { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; margin: 0 0 10px; background: var(--card);
+            animation: rvIn .45s ease both; }
+@keyframes rvIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.rv .head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.rv .num { width: 24px; height: 24px; border-radius: 50%; background: #0071e3; color: #fff; font-size: 12.5px; font-weight: 700;
+           display: inline-flex; align-items: center; justify-content: center; }
+.rv .chip { font-size: 12px; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); }
+.rv .chip.id { font-family: Consolas, monospace; } .rv .chip.k { background: rgba(0,113,227,.10); border-color: transparent; color: #2f7fe0; }
+.rv .row { border-radius: 8px; padding: 5px 10px; margin: 3px 0; white-space: pre-wrap; word-break: break-all; }
+.rv .row.del { background: var(--del); } .rv .row.add { background: var(--add); }
+.rv .row b { opacity: .7; margin-right: 6px; }
+.rv .why { font-size: 13.5px; margin-top: 8px; } .rv .why:before { content: "이유  "; font-weight: 700; color: #2f7fe0; }
+.rv .src { font-size: 12.5px; color: var(--sub); margin: 2px 0 6px; }
+.rv .path { font-size: 13px; margin: 4px 0; } .rv a { color: #2f7fe0; text-decoration: none; }
+.rv details { margin-top: 6px; font-size: 12.5px; } .rv details pre { white-space: pre-wrap; margin: 6px 0 0; color: var(--sub); }
+.rv .empty { color: var(--sub); font-size: 14px; padding: 8px 2px; }
+@media (max-width: 900px) { .rv .diff { grid-template-columns: 1fr; } }
+</style>
+<div class="rv"><div class="diff"><div class="pane"><h4>변경 전</h4><div class="mono"><div class="ln del"><span class="no">1</span>from langchain.chat_models import ChatOpenAI</div><div class="ln del"><span class="no">2</span>from langchain.chains import LLMChain</div><div class="ln del"><span class="no">3</span>from langchain.prompts import PromptTemplate</div><div class="ln "><span class="no">4</span> </div><div class="ln "><span class="no">5</span>llm = ChatOpenAI(temperature=0)</div><div class="ln del"><span class="no">6</span>chain = LLMChain(llm=llm, prompt=PromptTemplate.from_template(&#x27;{word}의 반대말은?&#x27;))</div><div class="ln del"><span class="no">7</span>print(chain.run(word=&#x27;크다&#x27;))</div></div></div><div class="pane"><h4>변경 후</h4><div class="mono"><div class="ln add"><span class="no">1</span>from langchain_openai import ChatOpenAI</div><div class="ln add"><span class="no">2</span>from langchain_core.prompts import PromptTemplate</div><div class="ln add"><span class="no">3</span>from langchain_core.output_parsers import StrOutputParser</div><div class="ln "><span class="no">4</span> </div><div class="ln "><span class="no">5</span>llm = ChatOpenAI(temperature=0)</div><div class="ln add"><span class="no">6</span>chain = PromptTemplate.from_template(&#x27;{word}의 반대말은?&#x27;) | llm | StrOutputParser()</div><div class="ln add"><span class="no">7</span>print(chain.invoke({&#x27;word&#x27;: &#x27;크다&#x27;}))</div></div></div></div><div class="legend"><span><span class="sw" style="background:#f85149"></span>지운 줄 5</span><span><span class="sw" style="background:#2ea043"></span>새 줄 5</span></div></div><h3>바뀐 줄</h3>
+<style>
+.rv { font-family: inherit; --add: rgba(46,160,67,.16); --add-b: #2ea043; --del: rgba(248,81,73,.15); --del-b: #f85149;
+      --card: rgba(127,127,127,.07); --line: rgba(127,127,127,.22); --sub: rgba(127,127,127,1); }
+.rv .mono { font-family: Consolas, 'SFMono-Regular', Menlo, monospace; font-size: 13px; }
+.rv .diff { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.rv .pane { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.rv .pane h4 { margin: 0; padding: 8px 12px; font-size: 13px; border-bottom: 1px solid var(--line); background: var(--card); }
+.rv .ln { display: flex; white-space: pre-wrap; word-break: break-all; padding: 1px 10px 1px 0; min-height: 20px; }
+.rv .ln .no { width: 34px; flex: none; text-align: right; padding-right: 10px; color: var(--sub); opacity: .55; user-select: none; }
+.rv .ln.del { background: var(--del); box-shadow: inset 3px 0 var(--del-b); }
+.rv .ln.add { background: var(--add); box-shadow: inset 3px 0 var(--add-b); }
+.rv .legend { display: flex; gap: 14px; font-size: 12.5px; color: var(--sub); margin: 8px 2px 0; }
+.rv .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.rv .card { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; margin: 0 0 10px; background: var(--card);
+            animation: rvIn .45s ease both; }
+@keyframes rvIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.rv .head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.rv .num { width: 24px; height: 24px; border-radius: 50%; background: #0071e3; color: #fff; font-size: 12.5px; font-weight: 700;
+           display: inline-flex; align-items: center; justify-content: center; }
+.rv .chip { font-size: 12px; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); }
+.rv .chip.id { font-family: Consolas, monospace; } .rv .chip.k { background: rgba(0,113,227,.10); border-color: transparent; color: #2f7fe0; }
+.rv .row { border-radius: 8px; padding: 5px 10px; margin: 3px 0; white-space: pre-wrap; word-break: break-all; }
+.rv .row.del { background: var(--del); } .rv .row.add { background: var(--add); }
+.rv .row b { opacity: .7; margin-right: 6px; }
+.rv .why { font-size: 13.5px; margin-top: 8px; } .rv .why:before { content: "이유  "; font-weight: 700; color: #2f7fe0; }
+.rv .src { font-size: 12.5px; color: var(--sub); margin: 2px 0 6px; }
+.rv .path { font-size: 13px; margin: 4px 0; } .rv a { color: #2f7fe0; text-decoration: none; }
+.rv details { margin-top: 6px; font-size: 12.5px; } .rv details pre { white-space: pre-wrap; margin: 6px 0 0; color: var(--sub); }
+.rv .empty { color: var(--sub); font-size: 14px; padding: 8px 2px; }
+@media (max-width: 900px) { .rv .diff { grid-template-columns: 1fr; } }
+</style>
+<div class="rv"><div class="card" style="animation-delay:0.00s"><div class="head"><span class="num">1</span><span class="chip id">imap-02229b7d73</span></div><div class="row del mono"><b>−</b>from langchain.chat_models import ChatOpenAI</div><div class="row add mono"><b>+</b>from langchain_openai import ChatOpenAI</div><div class="why">구버전 import 경로를 1.x 경로로 변경했습니다.</div></div><div class="card" style="animation-delay:0.06s"><div class="head"><span class="num">2</span><span class="chip id">imap-41c19d624a</span></div><div class="row del mono"><b>−</b>from langchain.chains import LLMChain</div><div class="src">이 줄은 지웠어요</div><div class="why">구버전 import 경로를 langchain_classic 경로로 변경했습니다. (변환 후 쓰지 않아 import 삭제)</div><div class="src">대안: <span class="mono">RunnableSequence, e.g., `prompt | llm`</span></div></div><div class="card" style="animation-delay:0.12s"><div class="head"><span class="num">3</span><span class="chip id">imap-8ed4309a81</span></div><div class="row del mono"><b>−</b>from langchain.prompts import PromptTemplate</div><div class="row add mono"><b>+</b>from langchain_core.prompts import PromptTemplate</div><div class="why">구버전 import 경로를 1.x 경로로 변경했습니다.</div></div><div class="card" style="animation-delay:0.18s"><div class="head"><span class="num">4</span><span class="chip id">mmap-246a7c2258</span><span class="chip id">doc-1f037eaf7dfb</span></div><div class="row del mono"><b>−</b>chain = LLMChain(llm=llm, prompt=PromptTemplate.from_template(&#x27;{word}의 반대말은?&#x27;))</div><div class="row add mono"><b>+</b>chain = PromptTemplate.from_template(&#x27;{word}의 반대말은?&#x27;) | llm | StrOutputParser()</div><div class="why">LLMChain을 LCEL로 변경하여 새로운 방식으로 체인을 구성했습니다.</div><div class="src">대안: <span class="mono">chain.run(x) returned only the output string. chain.invoke({...}) takes a dict and returns a dict (read the output key, e.g. result[&#x27;text&#x27;]), or rebuild the chain with LCEL (prompt | llm | StrOutputParser()) so invoke returns a string.</span></div></div><div class="card" style="animation-delay:0.24s"><div class="head"><span class="num">5</span><span class="chip id">mmap-246a7c2258</span></div><div class="row del mono"><b>−</b>print(chain.run(word=&#x27;크다&#x27;))</div><div class="row add mono"><b>+</b>print(chain.invoke({&#x27;word&#x27;: &#x27;크다&#x27;}))</div><div class="why">run 메서드를 invoke로 변경했습니다.</div><div class="src">대안: <span class="mono">chain.run(x) returned only the output string. chain.invoke({...}) takes a dict and returns a dict (read the output key, e.g. result[&#x27;text&#x27;]), or rebuild the chain with LCEL (prompt | llm | StrOutputParser()) so invoke returns a string.</span></div></div><div class="card" style="animation-delay:0.30s"><div class="head"><span class="num">6</span><span class="chip id">doc-1f037eaf7dfb</span></div><div class="row add mono"><b>+</b>from langchain_core.output_parsers import StrOutputParser</div><div class="why">StrOutputParser를 사용하기 위해 import를 추가했습니다.</div></div></div><h3>근거</h3>
+<style>
+.rv { font-family: inherit; --add: rgba(46,160,67,.16); --add-b: #2ea043; --del: rgba(248,81,73,.15); --del-b: #f85149;
+      --card: rgba(127,127,127,.07); --line: rgba(127,127,127,.22); --sub: rgba(127,127,127,1); }
+.rv .mono { font-family: Consolas, 'SFMono-Regular', Menlo, monospace; font-size: 13px; }
+.rv .diff { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.rv .pane { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.rv .pane h4 { margin: 0; padding: 8px 12px; font-size: 13px; border-bottom: 1px solid var(--line); background: var(--card); }
+.rv .ln { display: flex; white-space: pre-wrap; word-break: break-all; padding: 1px 10px 1px 0; min-height: 20px; }
+.rv .ln .no { width: 34px; flex: none; text-align: right; padding-right: 10px; color: var(--sub); opacity: .55; user-select: none; }
+.rv .ln.del { background: var(--del); box-shadow: inset 3px 0 var(--del-b); }
+.rv .ln.add { background: var(--add); box-shadow: inset 3px 0 var(--add-b); }
+.rv .legend { display: flex; gap: 14px; font-size: 12.5px; color: var(--sub); margin: 8px 2px 0; }
+.rv .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.rv .card { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; margin: 0 0 10px; background: var(--card);
+            animation: rvIn .45s ease both; }
+@keyframes rvIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.rv .head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.rv .num { width: 24px; height: 24px; border-radius: 50%; background: #0071e3; color: #fff; font-size: 12.5px; font-weight: 700;
+           display: inline-flex; align-items: center; justify-content: center; }
+.rv .chip { font-size: 12px; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); }
+.rv .chip.id { font-family: Consolas, monospace; } .rv .chip.k { background: rgba(0,113,227,.10); border-color: transparent; color: #2f7fe0; }
+.rv .row { border-radius: 8px; padding: 5px 10px; margin: 3px 0; white-space: pre-wrap; word-break: break-all; }
+.rv .row.del { background: var(--del); } .rv .row.add { background: var(--add); }
+.rv .row b { opacity: .7; margin-right: 6px; }
+.rv .why { font-size: 13.5px; margin-top: 8px; } .rv .why:before { content: "이유  "; font-weight: 700; color: #2f7fe0; }
+.rv .src { font-size: 12.5px; color: var(--sub); margin: 2px 0 6px; }
+.rv .path { font-size: 13px; margin: 4px 0; } .rv a { color: #2f7fe0; text-decoration: none; }
+.rv details { margin-top: 6px; font-size: 12.5px; } .rv details pre { white-space: pre-wrap; margin: 6px 0 0; color: var(--sub); }
+.rv .empty { color: var(--sub); font-size: 14px; padding: 8px 2px; }
+@media (max-width: 900px) { .rv .diff { grid-template-columns: 1fr; } }
+</style>
+<div class="rv"><div class="card" style="animation-delay:0.00s"><div class="head"><span class="chip id">imap-02229b7d73</span><span class="chip k">import 대응표</span><span class="src" style="margin:0">바뀐 줄 1번의 근거</span></div><div class="src">2번이 PyPI 패키지 코드에서 뽑은 옛 경로 → 1.x 경로 표 (실제로 import 해 보고 만든 것)</div><div class="path mono">langchain.chat_models.ChatOpenAI <b>→</b> langchain_openai.ChatOpenAI</div><div class="path">목표 버전에 같은 기능이 있고, 위치(import 경로)만 바뀌었어요</div><details><summary>근거 원문 보기</summary><pre>Legacy import: from langchain.chat_models import ChatOpenAI
+LangChain 1.x import: from langchain_openai import ChatOpenAI (native)
+Deprecated: since 0.0.10, removal 1.0</pre></details></div><div class="card" style="animation-delay:0.06s"><div class="head"><span class="chip id">imap-41c19d624a</span><span class="chip k">import 대응표</span><span class="src" style="margin:0">바뀐 줄 2번의 근거</span></div><div class="src">2번이 PyPI 패키지 코드에서 뽑은 옛 경로 → 1.x 경로 표 (실제로 import 해 보고 만든 것)</div><div class="path mono">langchain.chains.LLMChain <b>→</b> langchain_classic.chains.LLMChain</div><div class="path">1.x 에서는 langchain_classic(옛 창고)에만 남아 있어요. 대안이 있으면 최신 방식으로 바꿔요</div><div class="path">대안: <span class="mono">RunnableSequence, e.g., `prompt | llm`</span></div><details><summary>근거 원문 보기</summary><pre>Legacy import: from langchain.chains import LLMChain
+LangChain 1.x import: from langchain_classic.chains import LLMChain (classic_fallback)
+Deprecated: since 0.1.17, removal 2.0.0
+Alternative: RunnableSequence, e.g., `prompt | llm`</pre></details></div><div class="card" style="animation-delay:0.12s"><div class="head"><span class="chip id">imap-8ed4309a81</span><span class="chip k">import 대응표</span><span class="src" style="margin:0">바뀐 줄 3번의 근거</span></div><div class="src">2번이 PyPI 패키지 코드에서 뽑은 옛 경로 → 1.x 경로 표 (실제로 import 해 보고 만든 것)</div><div class="path mono">langchain.prompts.PromptTemplate <b>→</b> langchain_core.prompts.PromptTemplate</div><div class="path">목표 버전에 같은 기능이 있고, 위치(import 경로)만 바뀌었어요</div><details><summary>근거 원문 보기</summary><pre>Legacy import: from langchain.prompts import PromptTemplate
+LangChain 1.x import: from langchain_core.prompts import PromptTemplate (native)</pre></details></div><div class="card" style="animation-delay:0.18s"><div class="head"><span class="chip id">doc-1f037eaf7dfb</span><span class="chip k">옛 마이그레이션 가이드</span><span class="src" style="margin:0">바뀐 줄 4, 6번의 근거</span></div><div class="src">0.3.30 시절 공식 마이그레이션 가이드</div><div class="path">문서: <a href="https://github.com/langchain-ai/langchain/blob/4cf62a51a8849d4baea15071c5b0e10bf7ea31c8/docs/docs/versions/migrating_chains/llm_chain.ipynb" target="_blank">Migrating from LLMChain ↗</a></div><details><summary>근거 원문 보기</summary><pre>Migrating from LLMChain
+
+# Migrating from LLMChain
+
+[`LLMChain`](https://python.langchain.com/api_reference/langchain/chains/langchain.chains.llm.LLMChain.html) combined a prompt template, LLM, and output parser into a class.
+
+Some advantages of switching to the LCEL implementation are:
+
+- Clarity around contents and parameters. The legacy `LLMChain` contains a default output parser and other options.
+- Easier streaming. `LLMChain` only supports streaming via callbacks.
+- Easier access to raw message outputs if desired. `LLMChain` only exposes these via a parameter or via callback.
+
+## Legacy
+
+```python
+from langchain.chains import LLMChain
+from langchain_core.prompts import ChatPromptTempla</pre></details></div><div class="card" style="animation-delay:0.24s"><div class="head"><span class="chip id">mmap-246a7c2258</span><span class="chip k">메서드 대응표</span><span class="src" style="margin:0">바뀐 줄 4, 5번의 근거</span></div><div class="src">옛 메서드(.run · .predict 등) → 새 메서드 표</div><div class="path mono">Chain.run <b>→</b> invoke</div><div class="path">아직 동작하지만 없어질 예정인 옛 메서드예요</div><div class="path">대안: <span class="mono">chain.run(x) returned only the output string. chain.invoke({...}) takes a dict and returns a dict (read the output key, e.g. result[&#x27;text&#x27;]), or rebuild the chain with LCEL (prompt | llm | StrOutputParser()) so invoke returns a string.</span></div><details><summary>근거 원문 보기</summary><pre>Legacy method call: .run(...) on Chain (langchain.chains.base.Chain)
+LangChain 1.x status: deprecated (still works only in the legacy/classic class)
+Replacement: invoke
+Removal: 1.0
+Note: chain.run(x) returned only the output string. chain.invoke({...}) takes a dict and returns a dict (read the output key, e.g. result[&#x27;text&#x27;]), or rebuild the chain with LCEL (prompt | llm | StrOutputParser()) so invoke returns a string.</pre></details></div></div><h3>안내</h3>
+<style>
+.rv { font-family: inherit; --add: rgba(46,160,67,.16); --add-b: #2ea043; --del: rgba(248,81,73,.15); --del-b: #f85149;
+      --card: rgba(127,127,127,.07); --line: rgba(127,127,127,.22); --sub: rgba(127,127,127,1); }
+.rv .mono { font-family: Consolas, 'SFMono-Regular', Menlo, monospace; font-size: 13px; }
+.rv .diff { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.rv .pane { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.rv .pane h4 { margin: 0; padding: 8px 12px; font-size: 13px; border-bottom: 1px solid var(--line); background: var(--card); }
+.rv .ln { display: flex; white-space: pre-wrap; word-break: break-all; padding: 1px 10px 1px 0; min-height: 20px; }
+.rv .ln .no { width: 34px; flex: none; text-align: right; padding-right: 10px; color: var(--sub); opacity: .55; user-select: none; }
+.rv .ln.del { background: var(--del); box-shadow: inset 3px 0 var(--del-b); }
+.rv .ln.add { background: var(--add); box-shadow: inset 3px 0 var(--add-b); }
+.rv .legend { display: flex; gap: 14px; font-size: 12.5px; color: var(--sub); margin: 8px 2px 0; }
+.rv .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.rv .card { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; margin: 0 0 10px; background: var(--card);
+            animation: rvIn .45s ease both; }
+@keyframes rvIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.rv .head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.rv .num { width: 24px; height: 24px; border-radius: 50%; background: #0071e3; color: #fff; font-size: 12.5px; font-weight: 700;
+           display: inline-flex; align-items: center; justify-content: center; }
+.rv .chip { font-size: 12px; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); }
+.rv .chip.id { font-family: Consolas, monospace; } .rv .chip.k { background: rgba(0,113,227,.10); border-color: transparent; color: #2f7fe0; }
+.rv .row { border-radius: 8px; padding: 5px 10px; margin: 3px 0; white-space: pre-wrap; word-break: break-all; }
+.rv .row.del { background: var(--del); } .rv .row.add { background: var(--add); }
+.rv .row b { opacity: .7; margin-right: 6px; }
+.rv .why { font-size: 13.5px; margin-top: 8px; } .rv .why:before { content: "이유  "; font-weight: 700; color: #2f7fe0; }
+.rv .src { font-size: 12.5px; color: var(--sub); margin: 2px 0 6px; }
+.rv .path { font-size: 13px; margin: 4px 0; } .rv a { color: #2f7fe0; text-decoration: none; }
+.rv details { margin-top: 6px; font-size: 12.5px; } .rv details pre { white-space: pre-wrap; margin: 6px 0 0; color: var(--sub); }
+.rv .empty { color: var(--sub); font-size: 14px; padding: 8px 2px; }
+@media (max-width: 900px) { .rv .diff { grid-template-columns: 1fr; } }
+</style>
+<div class="rv"><div class="card"><div class="head"><span class="chip k">설치할 패키지</span></div><div class="row mono">pip install langchain-core langchain-openai</div></div><div class="card"><div class="head"><span class="chip k">안내</span></div><div>StrOutputParser()로 끝나는 체인의 invoke 결과는 이미 문자열이므로 그대로 사용해야 합니다.</div></div></div></body></html>

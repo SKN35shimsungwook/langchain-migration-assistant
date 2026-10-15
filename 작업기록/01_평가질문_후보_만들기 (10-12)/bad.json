@@ -1,0 +1,3 @@
+[{"id":"bad_01","difficulty":"easy","old_code":"from langchain_core.prompts import PromptTemplate","why_broken":"x","target_imports":"from langchain_core.prompts import PromptTemplate"},
+ {"id":"bad_02","difficulty":"medium","old_code":"from langchain.chains import LLMChain","why_broken":"x","target_imports":"from langchain.chains import LLMChain"},
+ {"id":"bad_02","difficulty":"hrad","old_code":"x","why_broken":"x","target_imports":"x"}]

@@ -1,0 +1,20 @@
+digraph G {
+rankdir=TB; bgcolor="#FFFFFF"; nodesep=0.22; ranksep=0.5; pad=0.35;
+node [shape=box, style="rounded,filled", fontname="Malgun Gothic", color="#C9D2DD", fontcolor="#18202B", penwidth=1.2, margin="0.22,0.12"];
+edge [color="#9AA5B4", arrowsize=0.6, penwidth=1.3];
+root [label=<<FONT POINT-SIZE="24"><B>LangChain</B></FONT><BR/><BR/><FONT POINT-SIZE="14">옛 코드</FONT>>, fillcolor="#2457C5", fontcolor="white", color="#2457C5", margin="0.3,0.12"];
+target [label=<<FONT POINT-SIZE="20"><B>LangChain 1.x</B></FONT><BR/><BR/><FONT POINT-SIZE="14">최신 1.4.4</FONT>>, fillcolor="#1B7A43", fontcolor="white", color="#1B7A43", margin="0.25,0.1"];
+v0_0_300 [label=<<TABLE BORDER="0" CELLSPACING="3" CELLPADDING="0"><TR><TD><FONT POINT-SIZE="22"><B>0.0.300</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="14" COLOR="#18202B">기능 6,692</FONT></TD></TR><TR><TD><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD BGCOLOR="#1B7A43" WIDTH="86" HEIGHT="6" FIXEDSIZE="TRUE"></TD><TD BGCOLOR="#B8501F" WIDTH="18" HEIGHT="6" FIXEDSIZE="TRUE"></TD><TD BGCOLOR="#6B7686" WIDTH="7" HEIGHT="6" FIXEDSIZE="TRUE"></TD></TR></TABLE></TD></TR></TABLE>>, fillcolor="#E4ECFB", color="#C9D2DD", penwidth=1.2];
+root -> v0_0_300 [color="#9AA5B4", penwidth=1.3];
+v0_0_354 [label=<<TABLE BORDER="0" CELLSPACING="3" CELLPADDING="0"><TR><TD><FONT POINT-SIZE="22"><B>0.0.354</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="14" COLOR="#18202B">기능 4,916</FONT></TD></TR><TR><TD><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD BGCOLOR="#1B7A43" WIDTH="82" HEIGHT="6" FIXEDSIZE="TRUE"></TD><TD BGCOLOR="#B8501F" WIDTH="26" HEIGHT="6" FIXEDSIZE="TRUE"></TD><TD BGCOLOR="#6B7686" WIDTH="1" HEIGHT="6" FIXEDSIZE="TRUE"></TD></TR></TABLE></TD></TR></TABLE>>, fillcolor="#E4ECFB", color="#C9D2DD", penwidth=1.2];
+root -> v0_0_354 [color="#9AA5B4", penwidth=1.3];
+v0_1_20 [label=<<TABLE BORDER="0" CELLSPACING="3" CELLPADDING="0"><TR><TD><FONT POINT-SIZE="22"><B>0.1.20</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="14" COLOR="#18202B">기능 4,951</FONT></TD></TR><TR><TD><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD BGCOLOR="#1B7A43" WIDTH="82" HEIGHT="6" FIXEDSIZE="TRUE"></TD><TD BGCOLOR="#B8501F" WIDTH="27" HEIGHT="6" FIXEDSIZE="TRUE"></TD><TD BGCOLOR="#6B7686" WIDTH="1" HEIGHT="6" FIXEDSIZE="TRUE"></TD></TR></TABLE></TD></TR></TABLE>>, fillcolor="#E4ECFB", color="#C9D2DD", penwidth=1.2];
+root -> v0_1_20 [color="#9AA5B4", penwidth=1.3];
+v0_2_17 [label=<<TABLE BORDER="0" CELLSPACING="3" CELLPADDING="0"><TR><TD><FONT POINT-SIZE="22"><B>0.2.17</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="14" COLOR="#18202B">기능 4,688</FONT></TD></TR><TR><TD><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD BGCOLOR="#1B7A43" WIDTH="81" HEIGHT="6" FIXEDSIZE="TRUE"></TD><TD BGCOLOR="#B8501F" WIDTH="28" HEIGHT="6" FIXEDSIZE="TRUE"></TD><TD BGCOLOR="#6B7686" WIDTH="1" HEIGHT="6" FIXEDSIZE="TRUE"></TD></TR></TABLE></TD></TR></TABLE>>, fillcolor="#E4ECFB", color="#C9D2DD", penwidth=1.2];
+root -> v0_2_17 [color="#9AA5B4", penwidth=1.3];
+v0_3_30 [label=<<TABLE BORDER="0" CELLSPACING="3" CELLPADDING="0"><TR><TD><FONT POINT-SIZE="22"><B>0.3.30</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="14" COLOR="#18202B">기능 4,681</FONT></TD></TR><TR><TD><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0"><TR><TD BGCOLOR="#1B7A43" WIDTH="81" HEIGHT="6" FIXEDSIZE="TRUE"></TD><TD BGCOLOR="#B8501F" WIDTH="28" HEIGHT="6" FIXEDSIZE="TRUE"></TD><TD BGCOLOR="#6B7686" WIDTH="1" HEIGHT="6" FIXEDSIZE="TRUE"></TD></TR></TABLE></TD></TR></TABLE>>, fillcolor="#E4ECFB", color="#C9D2DD", penwidth=1.2];
+root -> v0_3_30 [color="#9AA5B4", penwidth=1.3];
+auto [label=<<FONT POINT-SIZE="18"><B>모르겠어요</B></FONT><BR/><BR/><FONT POINT-SIZE="13">자동 감지</FONT>>, margin="0.3,0.15", fillcolor="#FFE7C2", style="rounded,filled,dashed", color="#B8501F", penwidth=3];
+root -> auto [style=dashed, color="#B8501F"];
+auto -> target [style=dashed, color="#1B7A43", penwidth=2];
+}

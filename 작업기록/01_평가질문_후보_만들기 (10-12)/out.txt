@@ -1,0 +1,207 @@
+[PASS] easy_01 (easy)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+[PASS] easy_02 (easy)
+        깨지는 줄: from langchain.llms import OpenAI
+          -> ModuleNotFoundError: No module named 'langchain.llms'
+[PASS] easy_03 (easy)
+        깨지는 줄: from langchain.prompts import PromptTemplate
+          -> ModuleNotFoundError: No module named 'langchain.prompts'
+        깨지는 줄: from langchain.schema import HumanMessage, SystemMessage
+          -> ModuleNotFoundError: No module named 'langchain.schema'
+[PASS] easy_04 (easy)
+        깨지는 줄: from langchain.text_splitter import RecursiveCharacterTextSplitter
+          -> ModuleNotFoundError: No module named 'langchain.text_splitter'
+        깨지는 줄: from langchain.document_loaders import TextLoader
+          -> ModuleNotFoundError: No module named 'langchain.document_loaders'
+[PASS] easy_05 (easy)
+        깨지는 줄: from langchain.embeddings import OpenAIEmbeddings
+          -> ImportError: cannot import name 'OpenAIEmbeddings' from 'langchain.embeddings' (C:\Users\PLAYDA~1\Ap
+        깨지는 줄: from langchain.vectorstores import FAISS
+          -> ModuleNotFoundError: No module named 'langchain.vectorstores'
+[PASS] easy_06 (easy)
+        깨지는 줄: from langchain.schema.output_parser import StrOutputParser
+          -> ModuleNotFoundError: No module named 'langchain.schema'
+        깨지는 줄: from langchain.schema import Document
+          -> ModuleNotFoundError: No module named 'langchain.schema'
+[PASS] easy_07 (easy)
+        깨지는 줄: from langchain.callbacks import get_openai_callback
+          -> ModuleNotFoundError: No module named 'langchain.callbacks'
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+[PASS] easy_08 (easy)
+        깨지는 줄: from langchain.document_loaders import PyPDFLoader, WebBaseLoader, CSVLoader
+          -> ModuleNotFoundError: No module named 'langchain.document_loaders'
+[PASS] easy_09 (easy)
+        깨지는 줄: from langchain.prompts import ChatPromptTemplate, FewShotPromptTemplate, PromptTemplate
+          -> ModuleNotFoundError: No module named 'langchain.prompts'
+        깨지는 줄: from langchain.prompts.chat import SystemMessagePromptTemplate, HumanMessagePromptTemplate
+          -> ModuleNotFoundError: No module named 'langchain.prompts'
+[PASS] easy_10 (easy)
+        깨지는 줄: from langchain.retrievers import BM25Retriever, EnsembleRetriever
+          -> ModuleNotFoundError: No module named 'langchain.retrievers'
+        깨지는 줄: from langchain.vectorstores import Chroma
+          -> ModuleNotFoundError: No module named 'langchain.vectorstores'
+[PASS] medium_01 (medium)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.prompts import PromptTemplate
+          -> ModuleNotFoundError: No module named 'langchain.prompts'
+        깨지는 줄: from langchain.chains import LLMChain
+          -> ModuleNotFoundError: No module named 'langchain.chains'
+[PASS] medium_02 (medium)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.chains import ConversationChain
+          -> ModuleNotFoundError: No module named 'langchain.chains'
+        깨지는 줄: from langchain.memory import ConversationBufferMemory
+          -> ModuleNotFoundError: No module named 'langchain.memory'
+[PASS] medium_03 (medium)
+        깨지는 줄: from langchain.llms import OpenAI
+          -> ModuleNotFoundError: No module named 'langchain.llms'
+        깨지는 줄: from langchain.prompts import PromptTemplate
+          -> ModuleNotFoundError: No module named 'langchain.prompts'
+        깨지는 줄: from langchain.chains import LLMChain, SimpleSequentialChain
+          -> ModuleNotFoundError: No module named 'langchain.chains'
+[PASS] medium_04 (medium)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.chains import RetrievalQA
+          -> ModuleNotFoundError: No module named 'langchain.chains'
+        깨지는 줄: from langchain.vectorstores import FAISS
+          -> ModuleNotFoundError: No module named 'langchain.vectorstores'
+        깨지는 줄: from langchain.embeddings import OpenAIEmbeddings
+          -> ImportError: cannot import name 'OpenAIEmbeddings' from 'langchain.embeddings' (C:\Users\PLAYDA~1\Ap
+[PASS] medium_05 (medium)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.chains import ConversationalRetrievalChain
+          -> ModuleNotFoundError: No module named 'langchain.chains'
+        깨지는 줄: from langchain.memory import ConversationBufferMemory
+          -> ModuleNotFoundError: No module named 'langchain.memory'
+        깨지는 줄: from langchain.vectorstores import FAISS
+          -> ModuleNotFoundError: No module named 'langchain.vectorstores'
+        깨지는 줄: from langchain.embeddings import OpenAIEmbeddings
+          -> ImportError: cannot import name 'OpenAIEmbeddings' from 'langchain.embeddings' (C:\Users\PLAYDA~1\Ap
+[PASS] medium_06 (medium)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.chains.summarize import load_summarize_chain
+          -> ModuleNotFoundError: No module named 'langchain.chains'
+        깨지는 줄: from langchain.docstore.document import Document
+          -> ModuleNotFoundError: No module named 'langchain.docstore'
+[PASS] medium_07 (medium)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.prompts import PromptTemplate
+          -> ModuleNotFoundError: No module named 'langchain.prompts'
+        깨지는 줄: from langchain.output_parsers import StructuredOutputParser, ResponseSchema
+          -> ModuleNotFoundError: No module named 'langchain.output_parsers'
+        깨지는 줄: from langchain.chains import LLMChain
+          -> ModuleNotFoundError: No module named 'langchain.chains'
+[PASS] medium_08 (medium)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.chains.router import MultiPromptChain
+          -> ModuleNotFoundError: No module named 'langchain.chains'
+[PASS] medium_09 (medium)
+        깨지는 줄: from langchain.llms import OpenAI
+          -> ModuleNotFoundError: No module named 'langchain.llms'
+        깨지는 줄: from langchain.prompts import PromptTemplate
+          -> ModuleNotFoundError: No module named 'langchain.prompts'
+        깨지는 줄: from langchain.chains import LLMChain, SequentialChain
+          -> ModuleNotFoundError: No module named 'langchain.chains'
+[PASS] medium_10 (medium)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.chains.question_answering import load_qa_chain
+          -> ModuleNotFoundError: No module named 'langchain.chains'
+        깨지는 줄: from langchain.schema import Document
+          -> ModuleNotFoundError: No module named 'langchain.schema'
+[PASS] hard_01 (hard)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.agents import initialize_agent, AgentType, Tool
+          -> ImportError: cannot import name 'initialize_agent' from 'langchain.agents' (C:\Users\PLAYDA~1\AppDat
+[PASS] hard_02 (hard)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.agents import AgentExecutor, create_openai_functions_agent
+          -> ImportError: cannot import name 'AgentExecutor' from 'langchain.agents' (C:\Users\PLAYDA~1\AppData\L
+        깨지는 줄: from langchain import hub
+          -> ImportError: cannot import name 'hub' from 'langchain' (C:\Users\PLAYDA~1\AppData\Local\Temp\claude\
+[PASS] hard_03 (hard)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.agents import initialize_agent, AgentType, load_tools
+          -> ImportError: cannot import name 'initialize_agent' from 'langchain.agents' (C:\Users\PLAYDA~1\AppDat
+        깨지는 줄: from langchain.memory import ConversationBufferMemory
+          -> ModuleNotFoundError: No module named 'langchain.memory'
+[PASS] hard_04 (hard)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.agents import AgentExecutor, create_react_agent
+          -> ImportError: cannot import name 'AgentExecutor' from 'langchain.agents' (C:\Users\PLAYDA~1\AppData\L
+        깨지는 줄: from langchain import hub
+          -> ImportError: cannot import name 'hub' from 'langchain' (C:\Users\PLAYDA~1\AppData\Local\Temp\claude\
+[PASS] hard_05 (hard)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.agents import AgentExecutor, create_tool_calling_agent
+          -> ImportError: cannot import name 'AgentExecutor' from 'langchain.agents' (C:\Users\PLAYDA~1\AppData\L
+        깨지는 줄: from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
+          -> ModuleNotFoundError: No module named 'langchain.prompts'
+[PASS] hard_06 (hard)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.agents import create_sql_agent
+          -> ImportError: cannot import name 'create_sql_agent' from 'langchain.agents' (C:\Users\PLAYDA~1\AppDat
+        깨지는 줄: from langchain.agents.agent_toolkits import SQLDatabaseToolkit
+          -> ModuleNotFoundError: No module named 'langchain.agents.agent_toolkits'
+        깨지는 줄: from langchain.sql_database import SQLDatabase
+          -> ModuleNotFoundError: No module named 'langchain.sql_database'
+[PASS] hard_07 (hard)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.agents import AgentExecutor, create_tool_calling_agent
+          -> ImportError: cannot import name 'AgentExecutor' from 'langchain.agents' (C:\Users\PLAYDA~1\AppData\L
+        깨지는 줄: from langchain.memory import ConversationBufferWindowMemory
+          -> ModuleNotFoundError: No module named 'langchain.memory'
+        깨지는 줄: from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
+          -> ModuleNotFoundError: No module named 'langchain.prompts'
+[PASS] hard_08 (hard)
+        깨지는 줄: from langchain.llms import OpenAI
+          -> ModuleNotFoundError: No module named 'langchain.llms'
+        깨지는 줄: from langchain.agents import Tool, ZeroShotAgent, AgentExecutor
+          -> ImportError: cannot import name 'Tool' from 'langchain.agents' (C:\Users\PLAYDA~1\AppData\Local\Temp
+        깨지는 줄: from langchain.chains import LLMChain
+          -> ModuleNotFoundError: No module named 'langchain.chains'
+[PASS] hard_09 (hard)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.agents.agent_toolkits import create_retriever_tool, create_conversational_retrieval_agent
+          -> ModuleNotFoundError: No module named 'langchain.agents.agent_toolkits'
+        깨지는 줄: from langchain.vectorstores import FAISS
+          -> ModuleNotFoundError: No module named 'langchain.vectorstores'
+        깨지는 줄: from langchain.embeddings import OpenAIEmbeddings
+          -> ImportError: cannot import name 'OpenAIEmbeddings' from 'langchain.embeddings' (C:\Users\PLAYDA~1\Ap
+[PASS] hard_10 (hard)
+        깨지는 줄: from langchain.chat_models import ChatOpenAI
+          -> ImportError: cannot import name 'ChatOpenAI' from 'langchain.chat_models' (C:\Users\PLAYDA~1\AppData
+        깨지는 줄: from langchain.agents import AgentExecutor
+          -> ImportError: cannot import name 'AgentExecutor' from 'langchain.agents' (C:\Users\PLAYDA~1\AppData\L
+        깨지는 줄: from langchain.agents.format_scratchpad import format_to_openai_function_messages
+          -> ModuleNotFoundError: No module named 'langchain.agents.format_scratchpad'
+        깨지는 줄: from langchain.agents.output_parsers import OpenAIFunctionsAgentOutputParser
+          -> ModuleNotFoundError: No module named 'langchain.agents.output_parsers'
+        깨지는 줄: from langchain.tools.render import format_tool_to_openai_function
+          -> ModuleNotFoundError: No module named 'langchain.tools.render'
+        깨지는 줄: from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
+          -> ModuleNotFoundError: No module named 'langchain.prompts'
+        깨지는 줄: from langchain.tools import StructuredTool
+          -> ImportError: cannot import name 'StructuredTool' from 'langchain.tools' (C:\Users\PLAYDA~1\AppData\L
+
+=== 요약 ===
+통과: 30 / 30
+난이도별 개수: easy 10, medium 10, hard 10  (목표: 각 10개)
+결과를 C:\Users\playdata2\Desktop\skn35 report\langchain_migration\eval\testset.json 에 기록했습니다.

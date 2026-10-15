@@ -1,0 +1,623 @@
+{
+ "classification": "migration",
+ "question": "Document 만들어서 쓰는 부분인데 0.3 코드예요. 1.x로 바꿔 주세요.\n\n```python\nfrom langchain.schema import Document\nfrom langchain.prompts import ChatPromptTemplate\n\ndocs = [Document(page_content=\"LangChain 1.0 출시\", metadata={\"src\": \"news\"})]\nprompt = ChatPromptTemplate.from_messages([(\"system\", \"요약가\"), (\"human\", \"{text}\")])\nprint(prompt.format_messages(text=docs[0].page_content))\n```",
+ "old_code": "from langchain.schema import Document\nfrom langchain.prompts import ChatPromptTemplate\n\ndocs = [Document(page_content=\"LangChain 1.0 출시\", metadata={\"src\": \"news\"})]\nprompt = ChatPromptTemplate.from_messages([(\"system\", \"요약가\"), (\"human\", \"{text}\")])\nprint(prompt.format_messages(text=docs[0].page_content))",
+ "analysis": {
+  "source_version": "0.3",
+  "target_version": "1.x",
+  "no_change_needed": false,
+  "issues": [
+   {
+    "id": "I1",
+    "line_start": 1,
+    "line_end": 1,
+    "related_lines": [],
+    "code": "from langchain.schema import Document",
+    "symbol": "langchain.schema.Document",
+    "issue_type": "symbol_renamed",
+    "severity": "breaking",
+    "what_changed": "Document의 경로가 변경되었습니다.",
+    "fix_direction": "새로운 경로로 Document를 임포트해야 합니다.",
+    "new_symbol": "langchain.document.Document",
+    "install_hint": null,
+    "evidence": [],
+    "confidence": "high",
+    "verification_needed": false
+   },
+   {
+    "id": "I2",
+    "line_start": 2,
+    "line_end": 2,
+    "related_lines": [],
+    "code": "from langchain.prompts import ChatPromptTemplate",
+    "symbol": "langchain.prompts.ChatPromptTemplate",
+    "issue_type": "symbol_renamed",
+    "severity": "breaking",
+    "what_changed": "ChatPromptTemplate의 경로가 변경되었습니다.",
+    "fix_direction": "새로운 경로로 ChatPromptTemplate를 임포트해야 합니다.",
+    "new_symbol": "langchain.chat.models.ChatPromptTemplate",
+    "install_hint": null,
+    "evidence": [],
+    "confidence": "high",
+    "verification_needed": false
+   },
+   {
+    "id": "I3",
+    "line_start": 4,
+    "line_end": 4,
+    "related_lines": [],
+    "code": "print(prompt.format_messages(text=docs[0].page_content))",
+    "symbol": "prompt.format_messages",
+    "issue_type": "api_replaced",
+    "severity": "breaking",
+    "what_changed": "format_messages 메서드가 다른 API로 대체되었습니다.",
+    "fix_direction": "새로운 API에 맞게 호출부를 수정해야 합니다.",
+    "new_symbol": null,
+    "install_hint": null,
+    "evidence": [],
+    "confidence": "high",
+    "verification_needed": false
+   }
+  ],
+  "missing_info": [],
+  "retrieval_queries": []
+ },
+ "target_version": "1.4.5",
+ "new_code": "from langchain_core.documents import Document\nfrom langchain_core.prompts import ChatPromptTemplate\n\n\n\ndocs = [Document(page_content=\"LangChain 1.0 출시\", metadata={\"src\": \"news\"})]\nprompt = ChatPromptTemplate.from_messages([(\"system\", \"요약가\"), (\"human\", \"{input}\")])\nchain = prompt | chat\nprint(chain.invoke({\"input\": docs[0].page_content})[\"content\"])",
+ "changes": [
+  {
+   "old_line": 1,
+   "old": "from langchain.schema import Document",
+   "new": "from langchain_core.documents import Document",
+   "evidence_ids": [
+    "imap-8dd7b780ff"
+   ],
+   "reason": "Document의 import 경로가 변경되었습니다."
+  },
+  {
+   "old_line": 2,
+   "old": "from langchain.prompts import ChatPromptTemplate",
+   "new": "from langchain_core.prompts import ChatPromptTemplate",
+   "evidence_ids": [
+    "imap-e28b20db51"
+   ],
+   "reason": "ChatPromptTemplate의 import 경로가 변경되었습니다."
+  },
+  {
+   "old_line": 5,
+   "old": "prompt = ChatPromptTemplate.from_messages([(\"system\", \"요약가\"), (\"human\", \"{text}\")])",
+   "new": "chain = prompt | chat",
+   "evidence_ids": [
+    "doc-f448729a3001"
+   ],
+   "reason": "체인 연산자를 사용하여 chain을 생성합니다."
+  },
+  {
+   "old_line": 6,
+   "old": "print(prompt.format_messages(text=docs[0].page_content))",
+   "new": "print(chain.invoke({\"input\": docs[0].page_content})[\"content\"])",
+   "evidence_ids": [
+    "doc-f448729a3001"
+   ],
+   "reason": "format_messages 메서드가 invoke로 대체되었습니다."
+  }
+ ],
+ "install_packages": [
+  "langchain-core"
+ ],
+ "verify_result": {
+  "passed": false,
+  "errors": [
+   {
+    "type": "unrecorded_change",
+    "message": "changes에 기록되지 않은 새 줄입니다: 'prompt = ChatPromptTemplate.from_messages([(\"system\", \"요약가\"), (\"human\", \"{input}\")])'",
+    "old_line": null,
+    "new_line": null,
+    "evidence_id": null,
+    "path": null
+   },
+   {
+    "type": "undefined_name",
+    "message": "chat을(를) 쓰지만 import하거나 정의하지 않았습니다(실행하면 NameError). EVIDENCE에 나온 import 경로로 추가하고 changes에 기록하세요. EVIDENCE에 경로가 없으면 이 변경을 되돌리고 unresolved에 적으세요.",
+    "old_line": null,
+    "new_line": 8,
+    "evidence_id": null,
+    "path": null
+   }
+  ],
+  "warnings": [],
+  "summary": {
+   "errors": 2,
+   "warnings": 0,
+   "changes": 4,
+   "unresolved": 1,
+   "import_check": "static"
+  }
+ },
+ "attempt": 3,
+ "rewrite_notes": [
+  "chat을 사용하기 위해 추가 설치가 필요합니다."
+ ],
+ "unresolved": [
+  {
+   "old_line": null,
+   "code": "prompt = ChatPromptTemplate.from_messages([(\"system\", \"요약가\"), (\"human\", \"{input}\")])",
+   "reason": "chat을(를) 쓰지만 import하거나 정의하지 않았습니다."
+  }
+ ],
+ "exclude_ids": [],
+ "evidences": [
+  {
+   "evidence_id": "imap-8dd7b780ff",
+   "source": "import_map",
+   "match": "exact",
+   "score": 1.0,
+   "text": "Legacy import: from langchain.schema import Document\nLangChain 1.x import: from langchain_core.documents import Document (native)",
+   "era": "1.x",
+   "url": null,
+   "title": null,
+   "section": null,
+   "old": "langchain.schema.Document",
+   "new": "langchain_core.documents.Document",
+   "kind": "native",
+   "import_status": "ok",
+   "alternative": null,
+   "signals": [],
+   "finding_ids": [
+    "I1"
+   ]
+  },
+  {
+   "evidence_id": "imap-e28b20db51",
+   "source": "import_map",
+   "match": "exact",
+   "score": 1.0,
+   "text": "Legacy import: from langchain.prompts import ChatPromptTemplate\nLangChain 1.x import: from langchain_core.prompts import ChatPromptTemplate (native)",
+   "era": "1.x",
+   "url": null,
+   "title": null,
+   "section": null,
+   "old": "langchain.prompts.ChatPromptTemplate",
+   "new": "langchain_core.prompts.ChatPromptTemplate",
+   "kind": "native",
+   "import_status": "ok",
+   "alternative": null,
+   "signals": [],
+   "finding_ids": [
+    "I2"
+   ]
+  },
+  {
+   "evidence_id": "doc-f448729a3001",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.04732,
+   "text": "ChatWatsonx integration > Chaining\n\n## Chaining\n\nCreate `ChatPromptTemplate` objects which will be responsible for creating a random question.\n\n```python\nfrom langchain_core.prompts import ChatPromptTemplate\n\nsystem = (\n    \"You are a helpful assistant that translates {input_language} to {output_language}.\"\n)\nhuman = \"{input}\"\nprompt = ChatPromptTemplate.from_messages([(\"system\", system), (\"human\", human)])\n```\n\nProvide inputs and run the chain.\n\n```python\nchain = prompt | chat\nchain.invoke(\n    {\n        \"input_language\": \"English\",\n        \"output_language\": \"German\",\n        \"input\": \"I love Python\",\n    }\n)\n```\n\n```text\nAIMessage(content='Ich liebe Python.', additional_kwargs={}, response_metadata={'token_usage': {'completion_tokens': 7, 'prompt_tokens': 28, 'total_tokens': 35}, 'model_name': 'ibm/granite-34b-code-instruct', 'system_fingerprint': '', 'finish_reason': 'stop'}, id='chat-fef871190b6047a7a3e68c58b3810c33', usage_metadata={'input_tokens': 28, 'output_tokens': 7, 'total_tokens': 35})\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/ibm_watsonx",
+   "title": "ChatWatsonx integration",
+   "section": "Chaining",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-4101bc73919b",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.04727,
+   "text": "ChatCrusoe integration > Chaining\n\n## Chaining\n\nWe can [chain](/oss/python/langchain/overview) our model with a prompt template like so:\n\n```python\nfrom langchain_core.prompts import ChatPromptTemplate\n\nprompt = ChatPromptTemplate.from_messages(\n    [\n        (\n            \"system\",\n            \"You are a helpful assistant that translates {input_language} to {output_language}.\",\n        ),\n        (\"human\", \"{input}\"),\n    ]\n)\n\nchain = prompt | llm\nchain.invoke(\n    {\n        \"input_language\": \"English\",\n        \"output_language\": \"German\",\n        \"input\": \"I love programming.\",\n    }\n)\n```\n\n```text\nAIMessage(content='Ich liebe Programmieren.', response_metadata={...}, id='run-...')\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/crusoe",
+   "title": "ChatCrusoe integration",
+   "section": "Chaining",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-1a0f39b3a36c",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.04583,
+   "text": "ChatOCIModelDeployment integration > Chaining\n\n## Chaining\n\n```python\nfrom langchain_core.prompts import ChatPromptTemplate\n\nprompt = ChatPromptTemplate.from_messages(\n    [\n        (\n            \"system\",\n            \"You are a helpful assistant that translates {input_language} to {output_language}.\",\n        ),\n        (\"human\", \"{input}\"),\n    ]\n)\n\nchain = prompt | chat\nchain.invoke(\n    {\n        \"input_language\": \"English\",\n        \"output_language\": \"German\",\n        \"input\": \"I love programming.\",\n    }\n)\n```\n\n```text\nAIMessage(content='Ich liebe Programmierung.', response_metadata={'token_usage': {'prompt_tokens': 38, 'total_tokens': 48, 'completion_tokens': 10}, 'model_name': 'odsc-llm', 'system_fingerprint': '', 'finish_reason': 'stop'}, id='run-5dd936b0-b97e-490e-9869-2ad3dd524234-0')\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/oci_data_science",
+   "title": "ChatOCIModelDeployment integration",
+   "section": "Chaining",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-f20213bd8e75",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.04226,
+   "text": "ChatParallel integration > Invocation\n\n## Invocation\n\n```python\nmessages = [\n    (\"system\", \"You are a helpful assistant with access to real-time web information.\"),\n    (\"human\", \"What are the latest developments in AI?\"),\n]\nai_msg = llm.invoke(messages)\nprint(ai_msg.content)\n```\n\n## Chaining\n\nChain the model with a prompt template:\n\n```python\nfrom langchain_core.prompts import ChatPromptTemplate\n\nprompt = ChatPromptTemplate(\n    [\n        (\n            \"system\",\n            \"You are a research assistant with access to real-time web information. \"\n            \"Answer questions about {topic} using current sources.\",\n        ),\n        (\"human\", \"{question}\"),\n    ]\n)\n\nchain = prompt | llm\nchain.invoke(\n    {\n        \"topic\": \"artificial intelligence\",\n        \"question\": \"What are the most significant AI breakthroughs in 2026?\",\n    }\n)\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/parallel",
+   "title": "ChatParallel integration",
+   "section": "Invocation",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-066c71523f09",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.04082,
+   "text": "ChatCerebras integration > Async\n\n## Async\n\n```python\nfrom langchain_cerebras import ChatCerebras\nfrom langchain_core.prompts import ChatPromptTemplate\n\nllm = ChatCerebras(\n    model=\"llama-3.3-70b\",\n    # other params...\n)\n\nprompt = ChatPromptTemplate.from_messages(\n    [\n        (\n            \"human\",\n            \"Let's play a game of opposites. What's the opposite of {topic}? Just give me the answer with no extra input.\",\n        )\n    ]\n)\nchain = prompt | llm\nawait chain.ainvoke({\"topic\": \"fire\"})\n```\n\n```text\nAIMessage(content='Ice', response_metadata={'token_usage': {'completion_tokens': 2, 'prompt_tokens': 36, 'total_tokens': 38}, 'model_name': 'llama3-8b-8192', 'system_fingerprint': 'fp_be27ec77ff', 'finish_reason': 'stop'}, id='run-7434bdde-1bec-44cf-827b-8d978071dfe8-0', usage_metadata={'input_tokens': 36, 'output_tokens': 2, 'total_tokens': 38})\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/cerebras",
+   "title": "ChatCerebras integration",
+   "section": "Async",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-ab3004a33293",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.04052,
+   "text": "ChatDatabricks integration > Chaining\n\n## Chaining\n\nSimilar to other chat models, `ChatDatabricks` can be used as a part of a complex chain.\n\n```python\nfrom langchain_core.prompts import ChatPromptTemplate\n\nprompt = ChatPromptTemplate.from_messages(\n    [\n        (\n            \"system\",\n            \"You are a chatbot that can answer questions about {topic}.\",\n        ),\n        (\"user\", \"{question}\"),\n    ]\n)\n\nchain = prompt | chat_model\nchain.invoke(\n    {\n        \"topic\": \"Databricks\",\n        \"question\": \"What is Unity Catalog?\",\n    }\n)\n```\n\n```text\nAIMessage(content=\"Unity Catalog is a new data catalog feature in Databricks that allows you to discover, manage, and govern all your data assets across your data landscape, including data lakes, data warehouses, and data marts. It provides a centralized repository for storing and managing metadata, data lineage, and access controls for all your data assets. Unity Catalog enables data teams to easily discover and access the data they need, while ensuring compliance with data privacy and security regulations. It is designed to work seamlessly with Databricks' Lakehouse platform, providing a unified experience for managing and analyzing all your data.\", response_metadata={'prompt_tokens': 32, 'completion_tokens': 118, 'total_tokens': 150}, id='run-82d72624-f8df-4c0d-a976-919feec09a55-0')\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/databricks",
+   "title": "ChatDatabricks integration",
+   "section": "Chaining",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-59a5bed0b2f0",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.03988,
+   "text": "ChatNVIDIA integration > Model types > General chat\n\n## General chat\n\nModels such as `meta/llama3-8b-instruct` and `mistralai/mixtral-8x22b-instruct-v0.1` are good all-around models that you can use for with any LangChain chat messages. Example below.\n\n```python\nfrom langchain_core.output_parsers import StrOutputParser\nfrom langchain_core.prompts import ChatPromptTemplate\nfrom langchain_nvidia_ai_endpoints import ChatNVIDIA\n\nprompt = ChatPromptTemplate.from_messages(\n    [(\"system\", \"You are a helpful AI assistant named Fred.\"), (\"user\", \"{input}\")]\n)\nchain = prompt | ChatNVIDIA(model=\"nvidia/nemotron-3-ultra-550b-a55b\") | StrOutputParser()\n\nfor txt in chain.stream({\"input\": \"What's your name?\"}):\n    print(txt, end=\"\")\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/nvidia_ai_endpoints",
+   "title": "ChatNVIDIA integration",
+   "section": "Model types > General chat",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-b8851e60ebfb",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.03736,
+   "text": "ChatAmazonNova integration > Chaining\n\n## Chaining\n\nAmazon Nova models work seamlessly with LangChain's LCEL (LangChain Expression Language) for building chains:\n\n```python\nfrom langchain_core.output_parsers import StrOutputParser\nfrom langchain_core.prompts import ChatPromptTemplate\n\nprompt = ChatPromptTemplate.from_messages([\n    (\"system\", \"You are a helpful assistant that translates {input_language} to {output_language}.\"),\n    (\"human\", \"{text}\"),\n])\n\nchain = prompt | model | StrOutputParser()\n\nresult = chain.invoke({\n    \"input_language\": \"English\",\n    \"output_language\": \"Spanish\",\n    \"text\": \"Hello, how are you?\"\n})\nprint(result)\n```\n\n```text\nHola, ¿cómo estás?\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/amazon_nova",
+   "title": "ChatAmazonNova integration",
+   "section": "Chaining",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-a9f53ff5ca16",
+   "source": "migration_guide",
+   "match": "hybrid",
+   "score": 0.0365,
+   "text": "Migrating from StuffDocumentsChain\n\n# Migrating from StuffDocumentsChain\n\n[StuffDocumentsChain](https://python.langchain.com/api_reference/langchain/chains/langchain.chains.combine_documents.stuff.StuffDocumentsChain.html) combines documents by concatenating them into a single context window. It is a straightforward and effective strategy for combining documents for question-answering, summarization, and other purposes.\n\n[create_stuff_documents_chain](https://python.langchain.com/api_reference/langchain/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html) is the recommended alternative. It functions the same as `StuffDocumentsChain`, with better support for streaming and batch functionality. Because it is a simple combination of [LCEL primitives](/docs/concepts/lcel), it is also easier to extend and incorporate into other LangChain applications.\n\nBelow we will go through both `StuffDocumentsChain` and `create_stuff_documents_chain` on a simple example for illustrative purposes.\n\nLet's first load a chat model:\n\n```python\n# | output: false\n# | echo: false\n\nfrom langchain_openai import ChatOpenAI\n\nllm = ChatOpenAI(model=\"gpt-4o-mini\", temperature=0)\n```\n\n## Example\n\nLet's go through an example where we analyze a set of documents. We first generate some simple documents for illustrative purposes:\n\n```python\nfrom langchain_core.documents import Document\n\ndocuments = [\n    Document(page_content=\"Apples are red\", metadata={\"title\": \"apple_book\"}),\n    Document(page_content=\"Blueberries are blue\", metadata={\"title\": \"blueberry_book\"}),\n    Document(page_content=\"Bananas are yelow\", metadata={\"title\": \"banana_book\"}),\n]\n```\n\n### Legacy\n\nBelow we show an implementation with `StuffDocumentsChain`. We define the prompt template for a summarization task and instantiate a [LLMChain](https://python.langchain.com/api_reference/langchain/chains/langchain.chains.llm.LLMChain.html) object for this purpose. We define how documents are formatted into the prompt and ensure consistency among the keys in the various prompts.\n\n```python\nfrom langchain.chains import LLMChain, StuffDocumentsChain\nfrom langchain_core.prompts import ChatPromptTemplate, PromptTemplate\n\n# This controls how each document will be formatted. Specifically,\n# it will be passed to `format_document` - see that function for more\n# details.\ndocument_prompt = PromptTemplate(\n    input_variables=[\"page_content\"], template=\"{page_content}\"\n)\ndocument_variable_name = \"context\"\n# The prompt here should take as an input variable the\n# `document_variable_name`\nprompt = ChatPromptTemplate.from_template(\"Summarize this content: {context}\")\n\nllm_chain = LLMChain(llm=llm, prompt=prompt)\nchain = StuffDocumentsChain(\n    llm_chain=llm_chain,\n    document_prompt=document_prompt,\n    document_variable_name=document_variable_name,\n)\n```\n\nWe can now invoke our chain:\n\n```python\nresult = chain.invoke(documents)\nresult[\"output_text\"]\n```\n\n```python\nfor chunk in chain.stream(documents):\n    print(chunk)\n```\n\n### LCEL\n\nBelow we show an implementation using `create_stuff_documents_chain`:\n\n```python\nfrom langchain.chains.combine_documents import create_stuff_documents_chain\nfrom langchain_core.prompts import ChatPromptTemplate\n\nprompt = ChatPromptTemplate.from_template(\"Summarize this content: {context}\")\nchain = create_stuff_documents_chain(llm, prompt)\n```\n\nInvoking the chain, we obtain a similar result as before:\n\n```python\nresult = chain.invoke({\"context\": documents})\nresult\n```\n\nNote that this implementation supports streaming of output tokens:\n\n```python\nfor chunk in chain.stream({\"context\": documents}):\n    print(chunk, end=\" | \")\n```\n\n## Next steps\n\nCheck out the [LCEL conceptual docs](/docs/concepts/lcel) for more background information.\n\nSee these [how-to guides](/docs/how_to/#qa-with-rag) for more on question-answering tasks with RAG.\n\nSee [this tutorial](/docs/tutorials/summarization/) for more LLM-based summarization strategies.",
+   "era": "0.3",
+   "url": "https://github.com/langchain-ai/langchain/blob/4cf62a51a8849d4baea15071c5b0e10bf7ea31c8/docs/docs/versions/migrating_chains/stuff_docs_chain.ipynb",
+   "title": "Migrating from StuffDocumentsChain",
+   "section": "",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "era:0.3",
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-b4e759d5fc73",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.03616,
+   "text": "Databricks unity catalog (Uc) integration > LangChain agent example\n\n## LangChain agent example\n\n```python\nfrom langchain_classic.agents import AgentExecutor, create_tool_calling_agent\nfrom langchain_core.prompts import ChatPromptTemplate\n\nprompt = ChatPromptTemplate.from_messages(\n    [\n        (\n            \"system\",\n            \"You are a helpful assistant. Make sure to use tool for information.\",\n        ),\n        (\"placeholder\", \"{chat_history}\"),\n        (\"human\", \"{input}\"),\n        (\"placeholder\", \"{agent_scratchpad}\"),\n    ]\n)\n\nagent = create_tool_calling_agent(llm, tools, prompt)\n```\n\n```python\nagent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)\nagent_executor.invoke({\"input\": \"36939 * 8922.4\"})\n```\n\n```text\n> Entering new AgentExecutor chain...\n\nInvoking: `main__tools__python_exec` with `{'code': 'print(36939 * 8922.4)'}`\n\n{\"format\": \"SCALAR\", \"value\": \"329584533.59999996\\n\", \"truncated\": false}The result of the multiplication is:\n\n329584533.59999996\n\n> Finished chain.\n```\n\n```text\n{'input': '36939 * 8922.4',\n 'output': 'The result of the multiplication is:\\n\\n329584533.59999996'}\n```\n\n***\n\n[Connect these docs](/use-these-docs) to your agent of choice via MCP for real-time answers.\n\n[Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/tools/databricks.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/tools/databricks",
+   "title": "Databricks unity catalog (Uc) integration",
+   "section": "LangChain agent example",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-b6356a202cd6",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.03594,
+   "text": "ChatPerplexity integration > Setup\n\n## Setup\n\nTo access Perplexity models you'll need to create a Perplexity account, get an API key, and install the `langchain-perplexity` integration package.\n\n## Credentials\n\nHead to [this page](https://www.perplexity.ai/) to sign up for Perplexity and generate an API key. Once you've done this set the `PPLX_API_KEY` environment variable:\n\n```python\nimport getpass\nimport os\n\nif \"PPLX_API_KEY\" not in os.environ:\n    os.environ[\"PPLX_API_KEY\"] = getpass.getpass(\"Enter your Perplexity API key: \")\n```\n\nTo enable automated tracing of your model calls, set your [LangSmith](/langsmith/observability) API key:\n\n```python\nos.environ[\"LANGSMITH_API_KEY\"] = getpass.getpass(\"Enter your LangSmith API key: \")\nos.environ[\"LANGSMITH_TRACING\"] = \"true\"\n```\n\n```python\nfrom langchain_core.prompts import ChatPromptTemplate\nfrom langchain_perplexity import ChatPerplexity\n```\n\nThe code provided assumes that your PPLX\\_API\\_KEY is set in your environment variables. If you would like to manually specify your API key and also choose a different model, you can use the following code:\n\n```python\nchat = ChatPerplexity(temperature=0, pplx_api_key=\"YOUR_API_KEY\", model=\"sonar\")\n```\n\nYou can check the [list of available Perplexity models](https://docs.perplexity.ai/getting-started/models). For reproducibility, we can set the API key dynamically by taking it as an input in this notebook.\n\n```python\nchat = ChatPerplexity(temperature=0, model=\"sonar\")\n```\n\n```python\nsystem = \"You are a helpful assistant.\"\nhuman = \"{input}\"\nprompt = ChatPromptTemplate.from_messages([(\"system\", system), (\"human\", human)])\n\nchain = prompt | chat\nresponse = chain.invoke({\"input\": \"Why is the Higgs Boson important?\"})\nresponse.content\n```\n\n```text\n'The Higgs Boson is an elementary subatomic particle that plays a crucial role in the Standard Model of particle physics, which accounts for three of the four fundamental forces governing the behavior of our universe: the strong and weak nuclear forces, electromagnetism, and gravity. The Higgs Boson is important for several reasons:\\n\\n1. **Final Elementary Particle**: The Higgs Boson is the last elementary particle waiting to be discovered under the Standard Model. Its detection helps complete the Standard Model and further our understanding of the fundamental forces in the universe.\\n\\n2. **Mass Generation**: The Higgs Boson is responsible for giving mass to other particles, a process that occurs through its interaction with the Higgs field. This mass generation is essential for the form\n… (output truncated, originally 1858 chars)\n```\n\nYou can format and structure the prompts like you would typically. In the following example, we ask the model to tell us a joke about cats.\n\n```python\nchat = ChatPerplexity(temperature=0, model=\"sonar\")\nprompt = ChatPromptTemplate.from_messages([(\"human\", \"Tell me a joke about {topic}\")])\nchain = prompt | chat\nresponse = chain.invoke({\"topic\": \"cats\"})\nresponse.content\n```\n\n```text\n'Here\\'s a joke about cats:\\n\\nWhy did the cat want math lessons from a mermaid?\\n\\nBecause it couldn\\'t find its \"core purpose\" in life!\\n\\nRemember, cats are unique and fascinating creatures, and each one has its own special traits and abilities. While some may see them as mysterious or even a bit aloof, they are still beloved pets that bring joy and companionship to their owners. So, if your cat ever seeks guidance from a mermaid, just remember that they are on their own journey to self-discovery!\\n'\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/perplexity",
+   "title": "ChatPerplexity integration",
+   "section": "Setup",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-1775e5e0cb7f",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.03512,
+   "text": "PerplexitySearch integration > Use within a chain\n\n## Use within a chain\n\nWe can easily combine this retriever into a chain to build a simple RAG pipeline.\n\n```python\nfrom langchain_core.output_parsers import StrOutputParser\nfrom langchain_core.prompts import ChatPromptTemplate\nfrom langchain_core.runnables import RunnablePassthrough\nfrom langchain_openai import ChatOpenAI\n\nprompt = ChatPromptTemplate.from_template(\n    \"\"\"Answer the question based only on the context provided.\n\nContext: {context}\n\nQuestion: {question}\"\"\"\n)\n\nllm = ChatOpenAI(model=\"gpt-5.5\")\n\ndef format_docs(docs):\n    return \"\\n\\n\".join(doc.page_content for doc in docs)\n\nchain = (\n    {\"context\": retriever | format_docs, \"question\": RunnablePassthrough()}\n    | prompt\n    | llm\n    | StrOutputParser()\n)\n\nchain.invoke(\"What were the major outcomes of the most recent Federal Reserve meeting?\")\n```\n\n***",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/retrievers/perplexity_search",
+   "title": "PerplexitySearch integration",
+   "section": "Use within a chain",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-e999f6052ca6",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.03414,
+   "text": "ChatCerebras integration > Async streaming\n\n## Async streaming\n\n```python\nfrom langchain_cerebras import ChatCerebras\nfrom langchain_core.prompts import ChatPromptTemplate\n\nllm = ChatCerebras(\n    model=\"llama-3.3-70b\",\n    # other params...\n)\n\nprompt = ChatPromptTemplate.from_messages(\n    [\n        (\n            \"human\",\n            \"Write a long convoluted story about {subject}. I want {num_paragraphs} paragraphs.\",\n        )\n    ]\n)\nchain = prompt | llm\n\nasync for chunk in chain.astream({\"num_paragraphs\": 3, \"subject\": \"blackholes\"}):\n    print(chunk.content, end=\"\", flush=True)\n```\n\n```text\nIn the distant reaches of the cosmos, there existed a peculiar phenomenon known as the \"Eclipse of Eternity,\" a swirling vortex of darkness that had been shrouded in mystery for eons. It was said that this blackhole, born from the cataclysmic collision of two ancient stars, had been slowly devouring the fabric of space-time itself, warping the very essence of reality. As the celestial bodies of the galaxy danced around it, they began to notice a strange, almost imperceptible distortion in the fabric of space, as if the blackhole's gravitational pull was exerting an influence on the very course of events itself.\n\nAs the centuries passed, astronomers from across the galaxy became increasingly fascinated by the Eclipse of Eternity, pouring over ancient texts and scouring the cosmos for any hi\n… (output truncated, originally 2137 chars)\n```\n\n***",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/cerebras",
+   "title": "ChatCerebras integration",
+   "section": "Async streaming",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-244f562d1313",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.03359,
+   "text": "ChatUpstage integration > Usage\n\n## Usage\n\n```python\nimport os\n\nos.environ[\"UPSTAGE_API_KEY\"] = \"YOUR_API_KEY\"\n```\n\n```python\nfrom langchain_core.prompts import ChatPromptTemplate\nfrom langchain_upstage import ChatUpstage\n\nchat = ChatUpstage()\n```\n\n```python\n# using chat invoke\nchat.invoke(\"Hello, how are you?\")\n```\n\n```python\n# using chat stream\nstream = chat.stream_events(\"Hello, how are you?\", version=\"v3\")\nfor token in stream.text:\n    print(token, end=\"\", flush=True)\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/upstage",
+   "title": "ChatUpstage integration",
+   "section": "Usage",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-8a908651925e",
+   "source": "migration_guide",
+   "match": "hybrid",
+   "score": 0.03349,
+   "text": "Migrating from MultiPromptChain\n\n# Migrating from MultiPromptChain\n\nThe [`MultiPromptChain`](https://python.langchain.com/api_reference/langchain/chains/langchain.chains.router.multi_prompt.MultiPromptChain.html) routed an input query to one of multiple LLMChains-- that is, given an input query, it used a LLM to select from a list of prompts, formatted the query into the prompt, and generated a response.\n\n`MultiPromptChain` does not support common [chat model](/docs/concepts/chat_models) features, such as message roles and [tool calling](/docs/concepts/tool_calling).\n\nA [LangGraph](https://langchain-ai.github.io/langgraph/) implementation confers a number of advantages for this problem:\n\n- Supports chat prompt templates, including messages with `system` and other roles;\n- Supports the use of tool calling for the routing step;\n- Supports streaming of both individual steps and output tokens.\n\nNow let's look at them side-by-side. Note that for this guide we will `langchain-openai >= 0.1.20`\n\n## Legacy\n\n```python\nfrom langchain.chains.router.multi_prompt import MultiPromptChain\nfrom langchain_openai import ChatOpenAI\n\nllm = ChatOpenAI(model=\"gpt-4o-mini\")\n\nprompt_1_template = \"\"\"\nYou are an expert on animals. Please answer the below query:\n\n{input}\n\"\"\"\n\nprompt_2_template = \"\"\"\nYou are an expert on vegetables. Please answer the below query:\n\n{input}\n\"\"\"\n\nprompt_infos = [\n    {\n        \"name\": \"animals\",\n        \"description\": \"prompt for an animal expert\",\n        \"prompt_template\": prompt_1_template,\n    },\n    {\n        \"name\": \"vegetables\",\n        \"description\": \"prompt for a vegetable expert\",\n        \"prompt_template\": prompt_2_template,\n    },\n]\n\nchain = MultiPromptChain.from_prompts(llm, prompt_infos)\n```\n\n```python\nchain.invoke({\"input\": \"What color are carrots?\"})\n```\n\nIn the [LangSmith trace](https://smith.langchain.com/public/e935238b-0b63-4984-abc8-873b2170a32d/r) we can see the two steps of this process, including the prompts for routing the query and the final selected prompt.\n\n## LangGraph\n\n```python\npip install -qU langgraph\n```\n\n```python\nfrom operator import itemgetter\nfrom typing import Literal\n\nfrom langchain_core.output_parsers import StrOutputParser\nfrom langchain_core.prompts import ChatPromptTemplate\nfrom langchain_core.runnables import RunnableConfig\nfrom langchain_openai import ChatOpenAI\nfrom langgraph.graph import END, START, StateGraph\nfrom typing_extensions import TypedDict\n\nllm = ChatOpenAI(model=\"gpt-4o-mini\")\n\n# Define the prompts we will route to\nprompt_1 = ChatPromptTemplate.from_messages(\n    [\n        (\"system\", \"You are an expert on animals.\"),\n        (\"human\", \"{input}\"),\n    ]\n)\nprompt_2 = ChatPromptTemplate.from_messages(\n    [\n        (\"system\", \"You are an expert on vegetables.\"),\n        (\"human\", \"{input}\"),\n    ]\n)\n\n# Construct the chains we will route to. These format the input query\n# into the respective prompt, run it through a chat model, and cast\n# the result to a string.\nchain_1 = prompt_1 | llm | StrOutputParser()\nchain_2 = prompt_2 | llm | StrOutputParser()\n\n# Next: define the chain that selects which branch to route to.\n# Here we will take advantage of tool-calling features to force\n# the output to select one of two desired branches.\nroute_system = \"Route the user's query to either the animal or vegetable expert.\"\nroute_prompt = ChatPromptTemplate.from_messages(\n    [\n        (\"system\", route_system),\n        (\"human\", \"{input}\"),\n    ]\n)\n\n# Define schema for output:\nclass RouteQuery(TypedDict):\n    \"\"\"Route query to destination expert.\"\"\"\n\n    destination: Literal[\"animal\", \"vegetable\"]\n\nroute_chain = route_prompt | llm.with_structured_output(RouteQuery)\n\n# For LangGraph, we will define the state of the graph to hold the query,\n# destination, and final answer.\nclass State(TypedDict):\n    query: str\n    destination: RouteQuery\n    answer: str\n\n# We define functions for each node, including routing the query:\nasync def route_query(state: State, config: RunnableConfig):\n    destination = await route_chain.ainvoke(state[\"query\"], config)\n    return {\"destination\": destination}\n\n# And one node for each prompt\nasync def prompt_1(state: State, config: RunnableConfig):\n    return {\"answer\": await chain_1.ainvoke(state[\"query\"], config)}\n\nasync def prompt_2(state: State, config: RunnableConfig):\n    return {\"answer\": await chain_2.ainvoke(state[\"query\"], config)}\n\n# We then define logic that selects the prompt based on the classification\ndef select_node(state: State) -> Literal[\"prompt_1\", \"prompt_2\"]:\n    if state[\"destination\"] == \"animal\":\n        return \"prompt_1\"\n    else:\n        return \"prompt_2\"\n\n# Finally, assemble the multi-prompt chain. This is a sequence of two steps:\n# 1) Select \"animal\" or \"vegetable\" via the route_chain, and collect the answer\n# alongside the input query.\n# 2) Route the input query to chain_1 or chain_2, based on the\n# selection.\ngraph = StateGraph(State)\ngraph.add_node(\"route_query\", route_query)\ngraph.add_node(\"prompt_1\", prompt_1)\ngraph.add_node(\"prompt_2\", prompt_2)\n\ngraph.add_edge(START, \"route_query\")\ngraph.add_conditional_edges(\"route_query\", select_node)\ngraph.add_edge(\"prompt_1\", END)\ngraph.add_edge(\"prompt_2\", END)\napp = graph.compile()\n```\n\n```python\nfrom IPython.display import Image\n\nImage(app.get_graph().draw_mermaid_png())\n```\n\nWe can invoke the chain as follows:\n\n```python\nstate = await app.ainvoke({\"query\": \"what color are carrots\"})\nprint(state[\"destination\"])\nprint(state[\"answer\"])\n```\n\nIn the [LangSmith trace](https://smith.langchain.com/public/1017a9d2-2d2a-4954-a5fd-5689632b4c5f/r) we can see the tool call that routed the query and the prompt that was selected to generate the answer.\n\n## Overview:\n\n- Under the hood, `MultiPromptChain` routed the query by instructing the LLM to generate JSON-formatted text, and parses out the intended destination. It took a registry of string prompt templates as input.\n- The LangGraph implementation, implemented above via lower-level primitives, uses tool-calling to route to arbitrary chains. In this example, the chains include chat model templates and chat models.\n\n## Next steps\n\nSee [this tutorial](/docs/tutorials/llm_chain) for more detail on building with prompt templates, LLMs, and output parsers.\n\nCheck out the [LangGraph documentation](https://langchain-ai.github.io/langgraph/) for detail on building with LangGraph.",
+   "era": "0.3",
+   "url": "https://github.com/langchain-ai/langchain/blob/4cf62a51a8849d4baea15071c5b0e10bf7ea31c8/docs/docs/versions/migrating_chains/multi_prompt_chain.ipynb",
+   "title": "Migrating from MultiPromptChain",
+   "section": "",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [
+    "era:0.3",
+    "uses_target_import"
+   ],
+   "finding_ids": []
+  },
+  {
+   "evidence_id": "doc-5976c38620a5",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.02914,
+   "text": "ChatBedrock integration > Prompt caching\n\n## Prompt caching\n\nBedrock supports [caching](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html) of elements of your prompts, including messages and tools. This allows you to reuse large documents, instructions, [few-shot documents](/langsmith/create-few-shot-evaluators), and other data to reduce latency and costs.\n\n**Not all models support prompt caching. See [Bedrock prompt caching supported models](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html#prompt-caching-models).**\n\nFor LangChain agents, use [`BedrockPromptCachingMiddleware`](/oss/python/integrations/middleware/aws#prompt-caching) to let LangChain optimize stable system prompt and tool content. For direct model calls, use manual `cachePoint` blocks or invocation-level `cache_control`, depending on the model and API.\n\nTo enable caching on an element of a prompt, mark its associated content block using the `cachePoint` key. See example below:\n\n```python\nimport requests\nfrom langchain_aws import ChatBedrockConverse\n\nllm = ChatBedrockConverse(model=\"us.anthropic.claude-sonnet-4-6\")\n\n# Pull LangChain readme\nget_response = requests.get(\n    \"https://raw.githubusercontent.com/langchain-ai/langchain/b476fdb54aa6e6f5f0b24a68c2f4a94e43b369f9/README.md\"\n)\nreadme = get_response.text\n\nmessages = [\n    {\n        \"role\": \"user\",\n        \"content\": [\n            {\n                \"type\": \"text\",\n                \"text\": \"What's LangChain, according to its README?\",\n            },\n            {\n                \"type\": \"text\",\n                \"text\": f\"{readme}\",\n            },\n            {\n                \"cachePoint\": {\"type\": \"default\"},\n            },\n        ],\n    },\n]\n\nresponse_1 = llm.invoke(messages)\nresponse_2 = llm.invoke(messages)\n\nusage_1 = response_1.usage_metadata[\"input_token_details\"]\nusage_2 = response_2.usage_metadata[\"input_token_details\"]\n\nprint(f\"First invocation:\\n{usage_1}\")\nprint(f\"\\nSecond:\\n{usage_2}\")\n```\n\n```python\nFirst invocation:\n{'cache_creation': 1528, 'cache_read': 0}\n\nSecond:\n{'cache_creation': 0, 'cache_read': 1528}\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/bedrock",
+   "title": "ChatBedrock integration",
+   "section": "Prompt caching",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [],
+   "finding_ids": [
+    "I3"
+   ]
+  },
+  {
+   "evidence_id": "doc-b1f8babaaecc",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.02853,
+   "text": "NVIDIARAGRetriever integration > Usage\n\n## Usage\n\n```python\ndocs = retriever.invoke(\"What is NVIDIA NIM?\")\nfor doc in docs:\n    print(doc.page_content)\n```\n\nAsync retrieval is also supported:\n\n```python\ndocs = await retriever.ainvoke(\"What is NVIDIA NIM?\")\n```\n\n## Use within a chain\n\n```python\nfrom langchain_core.output_parsers import StrOutputParser\nfrom langchain_core.prompts import ChatPromptTemplate\nfrom langchain_core.runnables import RunnablePassthrough\nfrom langchain_nvidia_ai_endpoints import ChatNVIDIA, NVIDIARAGRetriever\n\nretriever = NVIDIARAGRetriever(base_url=\"http://localhost:8081\", k=4)\nllm = ChatNVIDIA(model=\"meta/llama3-8b-instruct\")\n\nprompt = ChatPromptTemplate.from_template(\n    \"Answer the question based only on the following context:\\n{context}\\n\\nQuestion: {question}\"\n)\n\ndef format_docs(docs):\n    return \"\\n\\n\".join(doc.page_content for doc in docs)\n\nchain = (\n    {\"context\": retriever | format_docs, \"question\": RunnablePassthrough()}\n    | prompt\n    | llm\n    | StrOutputParser()\n)\n\nchain.invoke(\"What is NVIDIA NIM?\")\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/retrievers/nvidia",
+   "title": "NVIDIARAGRetriever integration",
+   "section": "Usage",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [],
+   "finding_ids": [
+    "I3"
+   ]
+  },
+  {
+   "evidence_id": "doc-a59e949cfb13",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.02749,
+   "text": "Google alloydb for postgresql integration > Basic usage > Load documents via custom table/metadata or custom page content columns\n\n## Load documents via custom table/metadata or custom page content columns\n\n```python\nloader = await AlloyDBLoader.create(\n    engine,\n    table_name=TABLE_NAME,\n    content_columns=[\"product_name\"],  # Optional\n    metadata_columns=[\"id\"],  # Optional\n)\ndocs = await loader.aload()\nprint(docs)\n```\n\n## Set page content format\n\nThe loader returns a list of Documents, with one document per row, with page content in specified string format, i.e. text (space separated concatenation), JSON, YAML, CSV, etc. JSON and YAML formats include headers, while text and CSV do not include field headers.\n\n```python\nloader = AlloyDBLoader.create(\n    engine,\n    table_name=\"products\",\n    content_columns=[\"product_name\", \"description\"],\n    format=\"YAML\",\n)\ndocs = await loader.aload()\nprint(docs)\n```\n\n***\n\n[Connect these docs](/use-these-docs) to your agent of choice via MCP for real-time answers.\n\n[Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/document_loaders/google_alloydb.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/document_loaders/google_alloydb",
+   "title": "Google alloydb for postgresql integration",
+   "section": "Basic usage > Load documents via custom table/metadata or custom page content columns",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [],
+   "finding_ids": [
+    "I3"
+   ]
+  },
+  {
+   "evidence_id": "doc-912eb0c70916",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.02743,
+   "text": "ChatOpenAI integration > Prompt caching > Explicit caching with breakpoints\n\n## Explicit caching with breakpoints\n\nRequires `langchain-openai>=1.3.5`. Supported on both the Chat Completions API and the [Responses API](/oss/python/integrations/chat/openai#responses-api).\n\nOpenAI supports [explicit prompt-cache breakpoints](https://developers.openai.com/api/docs/guides/prompt-caching#prompt-cache-breakpoints), which let you designate specific content blocks as cache boundaries. This gives you fine-grained control over which parts of a prompt are cached, rather than relying solely on automatic prefix caching.\n\nTo mark a content block as a cache breakpoint, add `\"prompt_cache_breakpoint\": {\"mode\": \"explicit\"}` to the block. Explicit breakpoints require GPT-5.6 or later model families.\n\n**Chat Completions**\n```python\nfrom langchain_openai import ChatOpenAI\n\nllm = ChatOpenAI(\n    model=\"gpt-5.6-sol\",\n    prompt_cache_options={\"mode\": \"explicit\"},\n)\n\nmessages = [\n    {\n        \"role\": \"system\",\n        \"content\": [\n            {\n                \"type\": \"text\",\n                \"text\": (\n                    \"You are a helpful assistant with access to a large knowledge base.\"\n                ),\n                \"prompt_cache_breakpoint\": {\"mode\": \"explicit\"},  # [!code highlight]\n            }\n        ],\n    },\n    {\"role\": \"user\", \"content\": \"Summarize the key points.\"},\n]\n\nresponse = llm.invoke(messages, prompt_cache_key=\"docs-breakpoint-v1\")\n```\n\n**View example trace**\nOpen a public LangSmith run for this example.\n\n**Responses API**\n```python\nfrom langchain_openai import ChatOpenAI\n\nllm = ChatOpenAI(\n    model=\"gpt-5.6-sol\",\n    use_responses_api=True,\n    prompt_cache_options={\"mode\": \"explicit\"},\n)\n\nmessages = [\n    {\n        \"role\": \"system\",\n        \"content\": [\n            {\n                \"type\": \"text\",\n                \"text\": (\n                    \"You are a helpful assistant with access to a large knowledge base.\"\n                ),\n                \"prompt_cache_breakpoint\": {\"mode\": \"explicit\"},  # [!code highlight]\n            }\n        ],\n    },\n    {\"role\": \"user\", \"content\": \"Summarize the key points.\"},\n]\n\nresponse = llm.invoke(messages, prompt_cache_key=\"docs-breakpoint-v1\")\n```\n\n**View example trace**\nOpen a public LangSmith run for this example.\n\nBreakpoints are supported on text, image, and file content blocks. You can also nest `prompt_cache_breakpoint` inside an `extras` dict if you prefer to keep the LangChain content block structure clean:\n\n```python\ncontent_block = {\n    \"type\": \"text\",\n    \"text\": \"Long system prompt...\",\n    \"extras\": {\"prompt_cache_breakpoint\": {\"mode\": \"explicit\"}},\n}\n```\n\n**View example trace**\nOpen a public LangSmith run for this example.",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/openai",
+   "title": "ChatOpenAI integration",
+   "section": "Prompt caching > Explicit caching with breakpoints",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [],
+   "finding_ids": [
+    "I3"
+   ]
+  },
+  {
+   "evidence_id": "doc-8604669c75a0",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.02715,
+   "text": "AWS middleware integration > Prompt caching\n\n## Prompt caching\n\n```python\nfrom langchain_aws import ChatBedrockConverse\nfrom langchain_aws.middleware.prompt_caching import BedrockPromptCachingMiddleware\nfrom langchain.agents import create_agent\nfrom langchain_core.runnables import RunnableConfig\nfrom langchain.messages import HumanMessage\nfrom langchain.tools import tool\nfrom langgraph.checkpoint.memory import MemorySaver\n\n@tool\ndef get_weather(city: str) -> str:\n    \"\"\"Get the current weather for a city.\"\"\"\n    return f\"The weather in {city} is sunny and 72F.\"\n\n# System prompt must exceed 1,024 tokens for caching to take effect\nLONG_PROMPT = (\n    \"You are a helpful weather assistant with deep expertise in meteorology, \"\n    \"climate science, and atmospheric phenomena. When answering questions about \"\n    \"weather, provide accurate and up-to-date information. \"\n    + \"You should always strive to give the most helpful response possible. \" * 85\n)\n\nagent = create_agent(\n    model=ChatBedrockConverse(model=\"us.anthropic.claude-sonnet-4-5-20250929-v1:0\"),\n    system_prompt=LONG_PROMPT,\n    tools=[get_weather],\n    middleware=[BedrockPromptCachingMiddleware(ttl=\"5m\")], # [!code highlight]\n    checkpointer=MemorySaver(),  # Persists conversation history\n)\n\n# Use a thread_id to maintain conversation state\nconfig: RunnableConfig = {\"configurable\": {\"thread_id\": \"user-123\"}}\n\n# First invocation: Creates cache with system prompt, tools, and user message\nresponse = agent.invoke(\n    {\"messages\": [HumanMessage(\"What is the weather in Miami?\")]}, config=config\n)\n\nlast_msg = response[\"messages\"][-1]\nprint(last_msg.content)\n\n# Check cache token usage\num = last_msg.usage_metadata\nif um:\n    details = um.get(\"input_token_details\", {})\n    cache_read = details.get(\"cache_read\", 0) or 0\n    cache_write = details.get(\"cache_creation\", 0) or 0\n    print(f\"Cache read: {cache_read}, Cache write: {cache_write}\")\n\n# Second invocation: Reuses cached system prompt, tools, and previous messages\nresponse = agent.invoke(\n    {\"messages\": [HumanMessage(\"How about Seattle?\")]}, config=config\n)\nprint(response[\"messages\"][-1].content)\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/middleware/aws",
+   "title": "AWS middleware integration",
+   "section": "Prompt caching",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [],
+   "finding_ids": [
+    "I3"
+   ]
+  },
+  {
+   "evidence_id": "doc-b8dd4b420a46",
+   "source": "latest_docs",
+   "match": "hybrid",
+   "score": 0.02533,
+   "text": "ChatAnthropic integration > Prompt caching > Explicit cache breakpoints\n\n## Explicit cache breakpoints\n\nPrompt caching can be used in [multi-turn conversations](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#continuing-a-multi-turn-conversation) to maintain context from earlier messages without redundant processing.\n\nWe can enable incremental caching by marking the final message with `cache_control`. Claude will automatically use the longest previously-cached prefix for follow-up messages.\n\nBelow, we implement a simple chatbot that incorporates this feature. We follow the LangChain [chatbot tutorial](/oss/python/langchain/quickstart), but add a custom [reducer](/oss/python/langgraph/graph-api#reducers) that automatically marks the last content block in each user message with `cache_control`:\n\n**Chatbot with incremental prompt caching**\n```python\nimport requests\nfrom langchain_anthropic import ChatAnthropic\nfrom langgraph.checkpoint.memory import MemorySaver\nfrom langgraph.graph import START, StateGraph, add_messages\nfrom typing_extensions import Annotated, TypedDict\n\nmodel = ChatAnthropic(model=\"claude-sonnet-4-6\")\n\n# Pull LangChain readme\nget_response = requests.get(\n    \"https://raw.githubusercontent.com/langchain-ai/langchain/master/README.md\"\n)\nreadme = get_response.text\n\ndef messages_reducer(left: list, right: list) -> list:\n    # Update last user message\n    for i in range(len(right) - 1, -1, -1):\n        if right[i].type == \"human\":\n            right[i].content[-1][\"cache_control\"] = {\"type\": \"ephemeral\"}\n            break\n\n    return add_messages(left, right)\n\nclass State(TypedDict):\n    messages: Annotated[list, messages_reducer]\n\nworkflow = StateGraph(state_schema=State)\n\n# Define the function that calls the model\ndef call_model(state: State):\n    response = model.invoke(state[\"messages\"])\n    return {\"messages\": [response]}\n\n# Define the (single) node in the graph\nworkflow.add_edge(START, \"model\")\nworkflow.add_node(\"model\", call_model)\n\n# Add memory\nmemory = MemorySaver()\napp = workflow.compile(checkpointer=memory)\n```\n\n```python\nfrom langchain.messages import HumanMessage\n\nconfig = {\"configurable\": {\"thread_id\": \"abc123\"}}\n\nquery = \"Hi! I'm Bob.\"\n\ninput_message = HumanMessage([{\"type\": \"text\", \"text\": query}])\noutput = app.invoke({\"messages\": [input_message]}, config)\noutput[\"messages\"][-1].pretty_print()\nprint(f\"\\n{output['messages'][-1].usage_metadata['input_token_details']}\")\n```\n\n```python\n================================== Ai Message ==================================\n\nHello, Bob! It's nice to meet you. How are you doing today? Is there something I can help you with?\n\n{'cache_read': 0, 'cache_creation': 0, 'ephemeral_5m_input_tokens': 0, 'ephemeral_1h_input_tokens': 0}\n```\n\n```python\nquery = f\"Check out this readme: {readme}\"\n\ninput_message = HumanMessage([{\"type\": \"text\", \"text\": query}])\noutput = app.invoke({\"messages\": [input_message]}, config)\noutput[\"messages\"][-1].pretty_print()\nprint(f\"\\n{output['messages'][-1].usage_metadata['input_token_details']}\")\n```",
+   "era": "1.x",
+   "url": "https://docs.langchain.com/oss/python/integrations/chat/anthropic",
+   "title": "ChatAnthropic integration",
+   "section": "Prompt caching > Explicit cache breakpoints",
+   "old": null,
+   "new": null,
+   "kind": null,
+   "import_status": null,
+   "alternative": null,
+   "signals": [],
+   "finding_ids": [
+    "I3"
+   ]
+  }
+ ],
+ "shown_evidence_ids": [
+  "imap-8dd7b780ff",
+  "imap-e28b20db51",
+  "doc-f448729a3001",
+  "doc-4101bc73919b",
+  "doc-1a0f39b3a36c",
+  "doc-f20213bd8e75",
+  "doc-066c71523f09"
+ ],
+ "rewrite_failed": false
+}

@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LangChain 마이그레이션 도우미 발표</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root { --bg: #E9ECEF; --ink: #18202B; --ink-2: #4A5565; --badge: #8A4B12; --badge-bg: #FBEBD8; }
+@media (prefers-color-scheme: dark) { :root { --bg: #101419; --ink: #E9EDF2; --ink-2: #A9B3C1; --badge: #F3B67C; --badge-bg: #3A2614; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'IBM Plex Sans KR', 'Malgun Gothic', sans-serif; padding: 32px 16px 64px; }
+header.top, main { max-width: 1100px; margin: 0 auto; }
+header.top { display: flex; flex-direction: column; gap: 8px; padding-bottom: 24px; }
+header.top h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.2rem); }
+header.top p { margin: 0; color: var(--ink-2); line-height: 1.6; }
+.badge { align-self: flex-start; font-size: 13px; font-weight: 700; color: var(--badge); background: var(--badge-bg); border-radius: 999px; padding: 2px 10px; }
+main { display: flex; flex-direction: column; gap: 40px; }
+figure.slide { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.frame { word-break: keep-all; overflow-wrap: break-word; position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,.18); }
+.frame > section { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; transform: scale(var(--s, .5)); transform-origin: 0 0; }
+.frame h1, .frame h2, .frame h3, .frame p, .frame ul, .frame ol { margin: 0; }
+.frame h1, .frame h2, .frame h3 { font-weight: 600; }
+.frame hr { margin: 0; border: none; width: 100%; }
+.frame table { width: 100%; border-collapse: separate; border-spacing: 0; overflow: hidden; }
+.frame th, .frame td { padding: .35em .6em; text-align: left; vertical-align: top; border-bottom: 1px solid #E1E0D9; }
+.frame th { font-weight: 600; }
+.frame tr:last-child td { border-bottom: none; }
+.frame svg.conn { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; }
+figcaption { font-size: 13px; color: var(--ink-2); text-align: right; }
+details.notes { font-size: 15px; line-height: 1.7; color: var(--ink-2); }
+details.notes summary { cursor: pointer; font-weight: 700; }
+details.notes p { margin: 6px 0 0; }
+@page { size: 1920px 1080px; margin: 0; }
+@media print {
+  body { padding: 0; background: #FFFFFF; }
+  header.top, figcaption, details.notes { display: none; }
+  main { max-width: none; gap: 0; }
+  .frame { width: 1920px; height: 1080px; aspect-ratio: auto; border-radius: 0; box-shadow: none; break-after: page; }
+  .frame > section { transform: none !important; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="badge">초안 · [__] 표시는 실험 결과가 나오면 채웁니다</span>
+  <h1>LangChain 마이그레이션 도우미 발표</h1>
+  <p>슬라이드 14장 · 각 슬라이드 아래 "발표자 노트"를 누르면 발표 대본이 보입니다 ·
+  <a href="발표자료.pdf">PDF로 보기</a> · <a href="../index.html">안내서 모음으로</a></p>
+</header>
+<main>
+<figure class="slide" id="slide-1" aria-label="1번 슬라이드"><div class="frame"><section id="cover" data-transition="fade" style="background:#14202E;color:#F2F1EC;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:space-between">
+<p style="font-size:28px;font-weight:600;color:#7FB2F0;letter-spacing:2px">SKN35 · LLM 연동 내외부 문서 기반 질의응답 시스템</p>
+<div style="display:flex;flex-direction:column;gap:32px">
+<h1 style="font-size:104px;font-weight:700;line-height:1.15;color:#F2F1EC">LangChain 버전<br>마이그레이션 도우미</h1>
+<p style="font-size:40px;color:#B9C3CF;line-height:1.4">문서 근거와 실행 근거로 이중 검증하는 코드 변환 챗봇</p>
+</div>
+<p style="font-size:28px;color:#B9C3CF">[팀 이름] · 발표 [발표자 이름] · [발표일]</p>
+</section></div><figcaption>1 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>안녕하세요, [팀 이름]입니다. 저희는 구버전 LangChain 코드를 최신 버전으로 바꿔 주고, 바꾼 코드가 실제로 동작하는지까지 확인해 주는 챗봇을 만들었습니다. 핵심은 &#x27;문서 근거&#x27;와 &#x27;실행 근거&#x27; 두 가지로 검증한다는 점입니다.</p></details></figure>
+<figure class="slide" id="slide-2" aria-label="2번 슬라이드"><div class="frame"><section id="problem" data-transition="fade" style="background:#F6F5F1;color:#1B2433;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;color:#1F5FAE;letter-spacing:2px">문제</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#1B2433">ChatGPT가 준 LangChain 코드, 실행하면 깨집니다</h2>
+</div>
+<div style="display:flex;gap:56px;align-items:start">
+<div style="flex:1.25;display:flex;flex-direction:column;gap:20px;background:#14202E;padding:48px;border-radius:16px">
+<p style="font-size:24px;color:#8FA0B3;font-family:'JetBrains Mono', 'Courier New', monospace"># LLM이 흔히 주는 코드</p>
+<p style="font-size:26px;line-height:1.6;color:#E8ECF1;font-family:'JetBrains Mono', 'Courier New', monospace">from langchain.chat_models import ChatOpenAI<br>from langchain.chains import LLMChain</p>
+<hr style="border-top:1px solid #34445A">
+<p style="font-size:24px;color:#8FA0B3;font-family:'JetBrains Mono', 'Courier New', monospace"># LangChain 1.4.4에서 실행 결과</p>
+<p style="font-size:24px;line-height:1.6;color:#F2A27E;font-family:'JetBrains Mono', 'Courier New', monospace">ImportError: cannot import name 'ChatOpenAI'<br>ModuleNotFoundError: No module named 'langchain.chains'</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:32px">
+<div style="display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:40px;font-weight:700;color:#1B2433">첫 줄부터 에러</h3>
+<p style="font-size:32px;line-height:1.5;color:#4A5363">LangChain 1.0에서 패키지가 나뉘고, 옛 체인과 에이전트가 빠졌습니다.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<h3 style="font-size:40px;font-weight:700;color:#1B2433">더 큰 문제</h3>
+<p style="font-size:32px;line-height:1.5;color:#4A5363">LLM은 자기 답이 틀렸다는 것을 <b>모릅니다.</b></p>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#8A8F98">LangChain 마이그레이션 도우미 · 2</p>
+</section></div><figcaption>2 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>수업 중에 강사님도 말씀하셨듯이, LangChain을 LLM에게 물어보면 복잡한 질문일수록 구버전 코드를 줍니다. 왼쪽 코드는 실제로 LangChain 1.4.4 환경에서 실행한 결과입니다. 첫 줄부터 에러가 납니다. 더 큰 문제는 LLM이 이게 틀렸다는 걸 모른다는 점입니다. [가능하면 ChatGPT에게 실제로 물어본 답변 캡처로 왼쪽 코드를 교체]</p></details></figure>
+<figure class="slide" id="slide-3" aria-label="3번 슬라이드"><div class="frame"><section id="cause" data-transition="fade" style="background:#F6F5F1;color:#1B2433;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;color:#1F5FAE;letter-spacing:2px">원인: 버전 지체 환각</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#1B2433">인터넷에는 구버전 코드가 더 많습니다</h2>
+<p style="font-size:32px;line-height:1.5;color:#4A5363">LLM은 데이터가 많은 쪽을 따라갑니다. 라이브러리는 빠르게 바뀌지만, 학습 데이터 속 코드는 대부분 과거 버전입니다.</p>
+</div>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;padding:40px;border:1px solid #E1E0D9;border-radius:16px">
+<p style="font-size:88px;font-weight:700;line-height:1.1;color:#1F5FAE">42.55%</p>
+<p style="font-size:28px;line-height:1.45;color:#1B2433">문서가 부족할 때, LLM 코드 중 목표 버전에서 실행되는 비율</p>
+<p style="font-size:24px;color:#8A8F98">When LLMs Lag Behind, 2026</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;padding:40px;border:1px solid #E1E0D9;border-radius:16px">
+<p style="font-size:88px;font-weight:700;line-height:1.1;color:#1F5FAE">66.36%</p>
+<p style="font-size:28px;line-height:1.45;color:#1B2433">구조화된 문서를 줘도 실행되는 비율</p>
+<p style="font-size:24px;color:#8A8F98">When LLMs Lag Behind, 2026</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;padding:40px;border:1px solid #E1E0D9;border-radius:16px">
+<p style="font-size:88px;font-weight:700;line-height:1.1;color:#1F5FAE">48~51%</p>
+<p style="font-size:28px;line-height:1.45;color:#1B2433">최신 상용 모델의 버전 지정 코드 생성 성공률</p>
+<p style="font-size:24px;color:#8A8F98">GitChameleon 2.0, 2025</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#8A8F98">LangChain 마이그레이션 도우미 · 3</p>
+</section></div><figcaption>3 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>이 현상을 &#x27;버전 지체 환각&#x27;이라고 부르겠습니다. 연구 결과도 같은 이야기를 합니다. 문서가 부족하면 LLM이 만든 코드 중 약 43%만 실행되고, 문서를 줘도 66% 정도에 머뭅니다. 즉 문서만 주는 것으로는 부족하고, 실제로 실행해서 확인하는 단계가 필요하다는 뜻입니다. 이게 저희 프로젝트의 출발점입니다. (출처: arXiv 2604.09515, arXiv 2507.12367)</p></details></figure>
+<figure class="slide" id="slide-4" aria-label="4번 슬라이드"><div class="frame"><section id="analogy" data-transition="fade" style="background:#F6F5F1;color:#1B2433;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;align-items:center;gap:32px">
+<div style="display:flex;flex-direction:column;gap:16px;align-self:stretch">
+<p style="font-size:24px;font-weight:600;color:#1F5FAE;letter-spacing:2px">쉽게 보면</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#1B2433">도구가 새 서랍으로 이사 갔습니다</h2>
+</div>
+<img src="../docs/images/01_kitchen_move.svg" alt="LangChain 1.0에서 ChatOpenAI는 langchain_openai 서랍으로, LLMChain은 창고로 옮겨지고 initialize_agent는 없어진 모습" style="width:1240px;height:620px;object-fit:contain">
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#8A8F98">LangChain 마이그레이션 도우미 · 4</p>
+</section></div><figcaption>4 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>코드를 모르는 분도 이해하기 쉽게 주방으로 비유해 보겠습니다. LangChain은 주방 도구 세트이고, import는 &quot;어느 서랍에서 어떤 도구를 꺼내라&quot;는 뜻입니다. 1.0에서 주방을 새로 정리하면서 ChatOpenAI는 새 서랍으로 이사 갔고, LLMChain은 창고로 치워졌고, initialize_agent는 없어졌습니다. 그런데 AI는 옛날 주방만 기억해서 옛날 서랍을 열라고 알려 줍니다. 그래서 에러가 납니다.</p></details></figure>
+<figure class="slide" id="slide-5" aria-label="5번 슬라이드"><div class="frame"><section id="solution" data-transition="fade" style="background:#F6F5F1;color:#1B2433;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;align-items:center;gap:32px">
+<div style="display:flex;flex-direction:column;gap:16px;align-self:stretch">
+<p style="font-size:24px;font-weight:600;color:#1F5FAE;letter-spacing:2px">해결</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#1B2433">문서로 한 번, 실행으로 한 번 더 확인합니다</h2>
+</div>
+<img src="../docs/images/02_two_cooks.svg" alt="일반 AI는 기억만으로 고쳐서 에러가 나도 모르고, 우리 프로그램은 안내서를 보고 서랍을 직접 열어 확인한다" style="width:1300px;height:618px;object-fit:contain">
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#8A8F98">LangChain 마이그레이션 도우미 · 5</p>
+</section></div><figcaption>5 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>저희 해결책은 이중 검증입니다. 일반 AI는 기억 속 옛날 주방만 보고 고치기 때문에, 실행하면 에러가 나도 모르고 끝납니다. 저희 프로그램은 첫째, 최신 공식 문서를 찾아보고 고칩니다. 이게 문서 근거입니다. 둘째, 고친 코드를 최신 LangChain 환경에서 실제로 실행해서 서랍에 도구가 있는지 확인합니다. 이게 실행 근거입니다. 없으면 에러를 힌트로 다시 찾아서 최대 2~3번까지 고칩니다. 그래서 답변에는 코드뿐 아니라 근거 링크와 몇 번 만에 통과했는지가 함께 나옵니다. (비교 요약: 근거 - 학습 데이터 vs 최신 공식 문서 / 확인 - 없음 vs import 실제 실행 / 틀렸을 때 - 모름 vs 재검색 후 재작성 / 답변 - 코드만 vs 코드+근거+시도 횟수)</p></details></figure>
+<figure class="slide" id="slide-6" aria-label="6번 슬라이드"><div class="frame"><section id="pipeline" data-transition="fade" style="background:#F6F5F1;color:#1B2433;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;color:#1F5FAE;letter-spacing:2px">시스템 구조</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#1B2433">안내서를 미리 만들고, 다섯 단계로 고칩니다</h2>
+</div>
+<div style="display:flex;gap:48px;align-items:center">
+<img src="../docs/images/08_system_v2.svg" alt="오프라인 준비(Qdrant, symbol_map), 온라인 다섯 단계(analyzer, retriever, rewriter, verifier, report)와 실패 시 되돌아가는 길, 바깥의 화면과 평가" style="width:920px;height:644px;object-fit:contain">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:6px;border-top:2px solid #D4D3CC;padding:16px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:700;color:#1B2433">한 번만: 안내서</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5363">가이드 · 릴리스 노트로 Qdrant와 symbol_map(구 → 신 심볼)</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;border-top:2px solid #D4D3CC;padding:16px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:700;color:#1F5FAE">핵심: verifier</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5363">(a) 근거 ID가 실제로 있는지 (b) import · 속성 검증</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;border-top:2px solid #D4D3CC;padding:16px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:700;color:#B4471B">실패하면 되돌아감</h3>
+<p style="font-size:26px;line-height:1.45;color:#4A5363">에러 종류 · 대상을 피드백으로 다시 검색 (최대 2~3번)</p>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#8A8F98">LangChain 마이그레이션 도우미 · 6</p>
+</section></div><figcaption>6 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>구조는 두 부분입니다. 먼저 한 번만, 공식 마이그레이션 가이드와 릴리스 노트를 잘게 나눠 Qdrant에 넣고, 옛 심볼과 새 심볼을 잇는 symbol_map을 만들어 둡니다. 그다음 요청이 올 때마다 다섯 단계를 거칩니다. analyzer가 ast로 심볼을 뽑고, retriever가 symbol_map과 Qdrant에서 근거를 찾고, rewriter가 근거 ID를 붙여 코드를 다시 씁니다. 핵심은 파란색 verifier입니다. (a) 근거 ID가 실제 검색 결과에 있는지, (b) 샌드박스에서 import와 속성이 실제로 있는지 확인하고, 실패하면 에러 종류와 대상을 피드백으로 retriever에 돌려보냅니다. 최대 [2~3]번 시도합니다. 화면과 평가는 이 파이프라인 바깥에서 그래프 함수 하나로 부릅니다. (GitHub 웹 버전으로 발표하면 레시피 카드가 직접 움직입니다.) 연결은 1번, 검색은 2번, 각 단계는 3번, 화면과 평가는 4번이 맡았습니다.</p></details></figure>
+<figure class="slide" id="slide-7" aria-label="7번 슬라이드"><div class="frame"><section id="experiment" data-transition="fade" style="background:#F6F5F1;color:#1B2433;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;color:#1F5FAE;letter-spacing:2px">실험 설계</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#1B2433">같은 코드 30개, 같은 조건으로 비교했습니다</h2>
+</div>
+<div style="display:flex;gap:48px;align-items:center">
+<img src="../docs/images/05_judge_contest.svg" alt="시험지 30장을 일반 AI와 우리 프로그램이 풀고, 같은 채점 로봇이 서랍을 직접 열어 판정해 점수판에 기록한다. 규칙: 같은 모델, 같은 문제 30개, 같은 채점 로봇, 꼼수는 실격" style="width:1060px;height:583px;object-fit:contain">
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:4px;border-top:2px solid #D4D3CC;padding:16px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:700;color:#1B2433">쉬움 10개</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A5363">import 경로만 바뀜</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px;border-top:2px solid #D4D3CC;padding:16px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:700;color:#1B2433">중간 10개</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A5363">체인 구조 변경</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px;border-top:2px solid #D4D3CC;padding:16px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:700;color:#1B2433">어려움 10개</h3>
+<p style="font-size:24px;line-height:1.4;color:#4A5363">에이전트·메모리 변경</p>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#8A8F98">LangChain 마이그레이션 도우미 · 7</p>
+</section></div><figcaption>7 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>공정한 비교를 위해 실험 규칙을 먼저 정했습니다. 저는 요리 대회 심사위원 역할입니다. 시험지는 난이도별로 10개씩 30개이고, 30개 모두 최신 LangChain에서 실제로 깨지는 것을 확인했습니다. 일반 AI와 우리 프로그램은 같은 모델 [모델명], temperature 0, 같은 입력을 쓰고, 똑같은 채점 로봇으로 판정합니다. 일반 AI에게는 &quot;LangChain 1.x로 변환해 주세요&quot;라는 고정된 문구만 줍니다. 성공 기준은 문법 통과, import 성공, 가져온 도구의 기능 이름이 실제로 있음(속성), 무효 변환 아님 네 가지입니다. 이 채점 기준은 팀 verifier와 똑같이 맞췄습니다. 우리 프로그램은 최대 [2~3]번까지 다시 고칠 수 있습니다. LangChain import를 지워서 통과하는 식의 꼼수는 실격으로 처리했습니다.</p></details></figure>
+<figure class="slide" id="slide-8" aria-label="8번 슬라이드"><div class="frame"><section id="demo" data-transition="fade" style="background:#14202E;color:#F2F1EC;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;color:#7FB2F0;letter-spacing:2px">데모</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#F2F1EC">결과와 근거를 한 화면에서 확인합니다</h2>
+</div>
+<div style="display:flex;gap:48px;align-items:center">
+<img src="../docs/images/10_screen_design.svg" alt="화면 설계도: 목표 버전 선택, 코드 입력, 진행 기록, 검증 배지, 변경 전후, 변경표와 근거 링크, 성능 비교 탭" style="width:960px;height:624px;object-fit:contain">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:6px;border-top:2px solid #34445A;padding:16px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:700;color:#7FB2F0">1 · 목표 버전 + 구버전 코드</h3>
+<p style="font-size:26px;line-height:1.45;color:#B9C3CF">LangChain 1.x · initialize_agent 에이전트 [hard_01]</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;border-top:2px solid #34445A;padding:16px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:700;color:#F2A27E">2 · 1회차 실패 → 재검색</h3>
+<p style="font-size:26px;line-height:1.45;color:#B9C3CF">진행 기록에 되돌아간 과정이 보임</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px;border-top:2px solid #34445A;padding:16px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:700;color:#7FB2F0">3 · 통과, 근거와 함께</h3>
+<p style="font-size:26px;line-height:1.45;color:#B9C3CF">검증 배지, 바뀐 줄, 근거 문서 링크</p>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#8A9AAD">LangChain 마이그레이션 도우미 · 8 · 화면 4번 · 현장 데모 실패에 대비해 녹화본 준비</p>
+</section></div><figcaption>8 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>이제 제가 만든 화면으로 직접 보여드리겠습니다. [화면 전환: streamlit run app/streamlit_app.py] 목표 버전으로 LangChain 1.x를 고르고, 어려움 단계의 에이전트 코드를 넣고 변환하기를 누르겠습니다. 진행 기록을 보시면 첫 시도에서 검증에 실패하고, 에러 종류와 대상을 들고 다시 검색한 과정이 보입니다. 두 번째 시도에서 통과했고, 검증 통과 배지와 근거 확인 배지가 함께 나옵니다. 아래에는 바뀐 줄과, 각 변경의 근거 문서 링크가 있습니다. 성능 비교 탭에서는 30문제 평가 결과를 바로 볼 수 있습니다. [실제 실행 결과에 맞게 수정]</p></details></figure>
+<figure class="slide" id="slide-9" aria-label="9번 슬라이드"><div class="frame"><section id="result" data-transition="fade" style="background:#F6F5F1;color:#1B2433;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;color:#1F5FAE;letter-spacing:2px">결과</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#1B2433">어려운 코드일수록 차이가 커졌습니다</h2>
+</div>
+<div style="display:flex;gap:56px;align-items:stretch">
+<div style="flex:0.75;display:flex;flex-direction:column;justify-content:center;gap:40px">
+<div style="display:flex;flex-direction:column;gap:4px">
+<p style="font-size:28px;font-weight:600;color:#1F5FAE">우리 시스템</p>
+<p style="font-size:120px;font-weight:700;line-height:1.05;color:#1B2433">[__]%</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px">
+<p style="font-size:28px;font-weight:600;color:#B4471B">일반 LLM (baseline)</p>
+<p style="font-size:120px;font-weight:700;line-height:1.05;color:#1B2433">[__]%</p>
+</div>
+<p style="font-size:28px;line-height:1.45;color:#4A5363">전체 성공률 (import · 속성 검증), 테스트 코드 30개 기준</p>
+<p style="font-size:28px;line-height:1.45;color:#1F5FAE">근거 일치율 [__]%</p>
+</div>
+<div style="flex:1.25;display:flex;flex-direction:column;justify-content:center;align-items:center;height:600px;background:#FFFFFF;border:2px dashed #C3C2B7;border-radius:16px;padding:40px">
+<p style="font-size:32px;font-weight:600;color:#8A8F98;text-align:center">[그래프 삽입]</p>
+<p style="font-size:24px;color:#8A8F98;text-align:center">charts/1_success_by_difficulty.png</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#8A8F98">LangChain 마이그레이션 도우미 · 9</p>
+</section></div><figcaption>9 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>결과입니다. 전체 성공률은 일반 LLM이 [__]%, 우리 시스템이 [__]%였습니다. 특히 어려움 단계에서 차이가 가장 컸습니다. 일반 LLM은 [__]%, 우리 시스템은 [__]%입니다. 에이전트처럼 구조 자체가 바뀐 코드일수록 기억에만 의존하는 LLM이 구버전 방식을 그대로 쓰는 경향이 컸습니다. 그리고 우리 시스템이 고친 부분의 근거 중 [__]%는 실제 검색 결과에 있는 근거였습니다. 지어낸 근거가 아니라는 뜻입니다. [실제 결과를 보고 제목과 설명을 수정]</p></details></figure>
+<figure class="slide" id="slide-10" aria-label="10번 슬라이드"><div class="frame"><section id="loop" data-transition="fade" style="background:#F6F5F1;color:#1B2433;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;color:#1F5FAE;letter-spacing:2px">검증 루프 효과</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#1B2433">실행 검증이 성공률을 [+__%p] 끌어올렸습니다</h2>
+</div>
+<div style="display:flex;gap:56px;align-items:stretch">
+<div style="flex:1.25;display:flex;flex-direction:column;justify-content:center;align-items:center;height:600px;background:#FFFFFF;border:2px dashed #C3C2B7;border-radius:16px;padding:40px">
+<p style="font-size:32px;font-weight:600;color:#8A8F98;text-align:center">[그래프 삽입]</p>
+<p style="font-size:24px;color:#8A8F98;text-align:center">charts/2_retry_effect.png</p>
+</div>
+<div style="flex:0.75;display:flex;flex-direction:column;justify-content:center;gap:32px">
+<div style="display:flex;flex-direction:column;gap:4px;border-top:2px solid #D4D3CC;padding:20px 0px 0px 0px">
+<p style="font-size:28px;color:#4A5363">1회차 성공률</p>
+<p style="font-size:72px;font-weight:700;line-height:1.1;color:#1B2433">[__]%</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px;border-top:2px solid #D4D3CC;padding:20px 0px 0px 0px">
+<p style="font-size:28px;color:#4A5363">최종 성공률 (최대 [2~3]회)</p>
+<p style="font-size:72px;font-weight:700;line-height:1.1;color:#1F5FAE">[__]%</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px;border-top:2px solid #D4D3CC;padding:20px 0px 0px 0px">
+<p style="font-size:28px;color:#4A5363">성공까지 평균 시도</p>
+<p style="font-size:72px;font-weight:700;line-height:1.1;color:#1B2433">[__]회</p>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#8A8F98">LangChain 마이그레이션 도우미 · 10</p>
+</section></div><figcaption>10 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>이 그래프가 저희 프로젝트의 핵심 근거입니다. 첫 시도만 보면 성공률이 [__]%인데, 실패한 코드를 에러 종류와 대상을 피드백으로 다시 검색해서 고치면 최종 [__]%까지 올라갑니다. 즉 &#x27;실행해서 확인하고 다시 고치는&#x27; 루프가 [__]%p를 만들어 냈습니다. 일반 LLM은 이 루프가 없기 때문에 틀려도 그대로 끝납니다.</p></details></figure>
+<figure class="slide" id="slide-11" aria-label="11번 슬라이드"><div class="frame"><section id="insight" data-transition="fade" style="background:#F6F5F1;color:#1B2433;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;color:#1F5FAE;letter-spacing:2px">실험 중 발견</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#1B2433">통과했다고 끝이 아니었습니다</h2>
+</div>
+<div style="display:flex;gap:56px;align-items:stretch">
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #E1E0D9;border-radius:16px;padding:36px">
+<h3 style="font-size:34px;font-weight:700;color:#1B2433">지원 종료 중인 패키지</h3>
+<p style="font-size:28px;line-height:1.45;color:#4A5363">langchain-community는 import만 해도 "지원 종료 중" 경고를 냅니다. 지금은 통과해도 곧 깨질 수 있습니다.</p>
+<p style="font-size:24px;color:#8A8F98">2026-10-12 확인 · langchain-community 0.4.2</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #E1E0D9;border-radius:16px;padding:36px">
+<h3 style="font-size:34px;font-weight:700;color:#1B2433">classic 우회</h3>
+<p style="font-size:28px;line-height:1.45;color:#4A5363">LLMChain은 물론 initialize_agent 같은 에이전트도 langchain_classic에서 가져오면 import는 통과합니다. 하지만 최신 방식은 아닙니다.</p>
+</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#FFFFFF;border:2px dashed #C3C2B7;border-radius:16px;padding:40px">
+<p style="font-size:32px;font-weight:600;color:#8A8F98;text-align:center">[그래프 삽입]</p>
+<p style="font-size:24px;color:#8A8F98;text-align:center">charts/3_success_quality.png</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#8A8F98">LangChain 마이그레이션 도우미 · 11</p>
+</section></div><figcaption>11 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>실험하면서 예상하지 못한 것을 두 가지 발견했습니다. 첫째, langchain-community 패키지는 import만 해도 지원 종료 경고가 나옵니다. 버전은 지금 이 순간에도 바뀌고 있다는 뜻입니다. 둘째, 옛 체인은 물론 initialize_agent 같은 에이전트도 langchain_classic에서 가져오면 import는 되지만, 최신 방식은 아닙니다. 처음에는 에이전트는 우회가 안 된다고 생각했는데, 하나씩 다시 확인해 보니 load_tools 하나만 안 되는 것이었습니다. 어려운 문제도 우회로 통과할 수 있기 때문에 단순 성공률 외에 &#x27;성공의 질&#x27;을 따로 집계했습니다. 오른쪽 그래프에서 우리 시스템은 깔끔한 성공 비율이 [__]%, 일반 LLM은 [__]%였습니다.</p></details></figure>
+<figure class="slide" id="slide-12" aria-label="12번 슬라이드"><div class="frame"><section id="limits" data-transition="fade" style="background:#F6F5F1;color:#1B2433;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:56px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;color:#1F5FAE;letter-spacing:2px">한계와 다음 단계</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;color:#1B2433">통과가 곧 정답은 아닙니다</h2>
+</div>
+<table style="font-size:30px;color:#1B2433;background:#FFFFFF;border:1px solid #E1E0D9">
+<tr style="background:#ECEBE5"><th style="width:50%;text-align:left">한계</th><th style="width:50%;text-align:left">다음 단계</th></tr>
+<tr><td>import와 속성 이름까지 확인하지만, 인자나 실행 결과는 확인 못 함</td><td>가짜 LLM으로 실제 실행까지 테스트</td></tr>
+<tr><td>테스트 30개, 팀이 직접 구축</td><td>공개 저장소의 실사용 코드로 확장</td></tr>
+<tr><td>구버전 환경 동작 확인은 생략</td><td>구버전 환경을 따로 만들어 교차 확인</td></tr>
+<tr><td>LangChain만 대상</td><td>pydantic, OpenAI SDK 등으로 확장</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#8A8F98">LangChain 마이그레이션 도우미 · 12</p>
+</section></div><figcaption>12 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>한계도 분명히 말씀드리겠습니다. 가장 큰 한계는 통과가 곧 정답은 아니라는 점입니다. 저희는 import와 함께 기능 이름이 진짜 있는지까지 확인하지만, 함수에 넣는 값이 틀리거나 실행 결과가 맞는지는 잡지 못합니다. 다음 단계로는 실제 API 대신 가짜 LLM을 넣어서 코드 전체를 실행해 보는 테스트를 추가할 수 있습니다. 또 테스트셋을 실사용 코드로 늘리고, 다른 라이브러리로도 확장할 계획입니다.</p></details></figure>
+<figure class="slide" id="slide-13" aria-label="13번 슬라이드"><div class="frame"><section id="value" data-transition="fade" style="background:#1F5FAE;color:#FFFFFF;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;justify-content:space-between">
+<div style="display:flex;flex-direction:column;gap:24px">
+<p style="font-size:24px;font-weight:600;color:#D6E5F8;letter-spacing:2px">가치</p>
+<h2 style="font-size:80px;font-weight:700;line-height:1.15;color:#FFFFFF">라이브러리가 바뀔 때마다,<br>근거와 함께 확인된 코드</h2>
+</div>
+<div style="display:flex;gap:48px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;border-top:2px solid #8DB6EA;padding:24px 0px 0px 0px">
+<h3 style="font-size:36px;font-weight:700;color:#FFFFFF">시간 절감</h3>
+<p style="font-size:28px;line-height:1.45;color:#E4EEFB">개발자가 에러를 직접 추적하는 시간을 줄임 [__분 → __분]</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;border-top:2px solid #8DB6EA;padding:24px 0px 0px 0px">
+<h3 style="font-size:36px;font-weight:700;color:#FFFFFF">신뢰</h3>
+<p style="font-size:28px;line-height:1.45;color:#E4EEFB">근거 문서 링크와 검증 통과 여부를 함께 제시</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;border-top:2px solid #8DB6EA;padding:24px 0px 0px 0px">
+<h3 style="font-size:36px;font-weight:700;color:#FFFFFF">확장</h3>
+<p style="font-size:28px;line-height:1.45;color:#E4EEFB">문서와 검증 환경만 바꾸면 다른 라이브러리에도 적용</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#D6E5F8">LangChain 마이그레이션 도우미 · 13</p>
+</section></div><figcaption>13 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>이 시스템의 가치를 세 가지로 정리하겠습니다. 첫째, 개발자가 버전 에러를 직접 찾아 고치는 시간을 줄여 줍니다. 둘째, 답변마다 근거 문서와 검증 결과가 붙어 있어서 믿고 쓸 수 있습니다. 셋째, 구조가 문서와 검증 환경에만 의존하기 때문에 LangChain뿐 아니라 빠르게 바뀌는 다른 라이브러리에도 그대로 적용할 수 있습니다. [시간 절감 수치는 측정했을 때만 넣고, 없으면 괄호 부분 삭제]</p></details></figure>
+<figure class="slide" id="slide-14" aria-label="14번 슬라이드"><div class="frame"><section id="closing" data-transition="fade" style="background:#14202E;color:#F2F1EC;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:space-between">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;font-weight:600;color:#7FB2F0;letter-spacing:2px">팀</p>
+<div style="display:flex;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#1E2D3F;border-radius:16px;padding:32px">
+<p style="font-size:24px;color:#8A9AAD">1번</p>
+<h3 style="font-size:32px;font-weight:700;color:#F2F1EC">그래프 · 백엔드</h3>
+<p style="font-size:24px;color:#B9C3CF">State · 연결 · 재시도</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#1E2D3F;border-radius:16px;padding:32px">
+<p style="font-size:24px;color:#8A9AAD">2번</p>
+<h3 style="font-size:32px;font-weight:700;color:#F2F1EC">데이터 · 검색</h3>
+<p style="font-size:24px;color:#B9C3CF">문서 · Qdrant · symbol_map</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#1E2D3F;border-radius:16px;padding:32px">
+<p style="font-size:24px;color:#8A9AAD">3번</p>
+<h3 style="font-size:32px;font-weight:700;color:#F2F1EC">변환 · 검증</h3>
+<p style="font-size:24px;color:#B9C3CF">변환 · 검증 로직</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#1E2D3F;border-radius:16px;padding:32px">
+<p style="font-size:24px;color:#8A9AAD">4번</p>
+<h3 style="font-size:32px;font-weight:700;color:#F2F1EC">화면 · 평가 · 발표</h3>
+<p style="font-size:24px;color:#B9C3CF">화면 · 실험 · 발표</p>
+</div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px">
+<h1 style="font-size:104px;font-weight:700;line-height:1.1;color:#F2F1EC">감사합니다</h1>
+<p style="font-size:36px;color:#B9C3CF">질문 받겠습니다 · github.com/SKN35shimsungwook/langchain-migration-helper</p>
+</div>
+</section></div><figcaption>14 / 14</figcaption><details class="notes"><summary>발표자 노트</summary><p>저희 팀은 이렇게 역할을 나눠 진행했습니다. 감사합니다. 질문 받겠습니다. [예상 질문 대비: import만 검증하나 → import와 기능 이름(속성)까지, 인자와 실행 결과는 한계 슬라이드 / 30개로 충분한가 → 난이도별 경향 확인이 목적 / 왜 LLM에게 검증을 맡기지 않았나 → 검증 LLM도 같은 구버전 지식을 가짐 / 근거를 지어낼 수 있지 않나 → verifier가 근거 ID를 확인하고 근거 일치율로 보고]</p></details></figure>
+</main>
+<script>
+function fit() { document.querySelectorAll('.frame').forEach(f => f.style.setProperty('--s', f.clientWidth / 1920)); }
+fit();
+if ('ResizeObserver' in window) { new ResizeObserver(fit).observe(document.querySelector('main')); } else { addEventListener('resize', fit); }
+</script>
+</body>
+</html>

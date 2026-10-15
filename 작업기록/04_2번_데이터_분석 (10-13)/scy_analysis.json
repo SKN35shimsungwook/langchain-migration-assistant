@@ -1,0 +1,785 @@
+{
+ "docs": {
+  "latest_count": 271,
+  "latest_bytes": 4356035,
+  "latest_sections": [
+   [
+    "tools",
+    38
+   ],
+   [
+    "chat",
+    36
+   ],
+   [
+    "LangChain",
+    35
+   ],
+   [
+    "vectorstores",
+    32
+   ],
+   [
+    "embeddings",
+    27
+   ],
+   [
+    "Integrations",
+    24
+   ],
+   [
+    "document_loaders",
+    24
+   ],
+   [
+    "retrievers",
+    16
+   ],
+   [
+    "Learn",
+    15
+   ],
+   [
+    "Reference",
+    9
+   ],
+   [
+    "splitters",
+    7
+   ],
+   [
+    "middleware",
+    5
+   ]
+  ],
+  "latest_has_v1_guide": [
+   "https://docs.langchain.com/oss/python/migrate/langchain-mcp-adapters",
+   "https://docs.langchain.com/oss/python/migrate/langchain-v1"
+  ],
+  "migration_count": 24,
+  "migration_groups": [
+   [
+    "chains",
+    13
+   ],
+   [
+    "memory",
+    5
+   ],
+   [
+    "version_guide",
+    5
+   ],
+   [
+    "agents",
+    1
+   ]
+  ],
+  "migration_era": [
+   [
+    "0.3",
+    24
+   ]
+  ],
+  "integrations_share": 209
+ },
+ "symbols": {
+  "langchain-0.0.300": 6700,
+  "langchain-0.0.354": 4920,
+  "langchain-0.1.20": 4955,
+  "langchain-0.2.17": 4694,
+  "langchain-0.3.30": 4689,
+  "langchain-1.4.4": 349,
+  "langchain-anthropic-1.7.6": 111,
+  "langchain-chroma-1.1.0": 8,
+  "langchain-classic-1.0.8": 4659,
+  "langchain-community-0.0.38": 6286,
+  "langchain-community-0.2.19": 7476,
+  "langchain-community-0.3.31": 7856,
+  "langchain-community-0.4.2": 7356,
+  "langchain-core-0.1.53": 1144,
+  "langchain-core-0.2.43": 1341,
+  "langchain-core-0.3.86": 1420,
+  "langchain-core-1.6.10": 1494,
+  "langchain-google-genai-4.4.1": 83,
+  "langchain-huggingface-1.2.3": 86,
+  "langchain-ollama-1.1.0": 46,
+  "langchain-openai-1.7.1": 187,
+  "langchain-text-splitters-1.1.3": 75,
+  "langgraph-1.2.14": 225
+ },
+ "import_map": {
+  "count": 9155,
+  "kind": [
+   [
+    "native",
+    7094
+   ],
+   [
+    "classic_fallback",
+    1419
+   ],
+   [
+    "unresolved",
+    642
+   ]
+  ],
+  "import_status": [
+   [
+    "ok",
+    8001
+   ],
+   [
+    null,
+    642
+   ],
+   [
+    "missing_package",
+    488
+   ],
+   [
+    "error",
+    19
+   ],
+   [
+    "missing_dependency",
+    5
+   ]
+  ],
+  "granularity": [
+   [
+    "symbol",
+    9146
+   ],
+   [
+    "module",
+    9
+   ]
+  ],
+  "sources": [
+   [
+    "cli",
+    4759
+   ],
+   [
+    "origin",
+    4185
+   ],
+   [
+    "classic",
+    1419
+   ],
+   [
+    "deprecated_target",
+    365
+   ],
+   [
+    "deprecated",
+    202
+   ]
+  ],
+  "new_package": [
+   [
+    "langchain_core",
+    3882
+   ],
+   [
+    "langchain_community",
+    2456
+   ],
+   [
+    "langchain_classic",
+    1419
+   ],
+   [
+    "None",
+    642
+   ],
+   [
+    "langchain_google_community",
+    94
+   ],
+   [
+    "langchain_openai",
+    70
+   ],
+   [
+    "langchain_unstructured",
+    63
+   ],
+   [
+    "langchain_huggingface",
+    50
+   ],
+   [
+    "pydantic",
+    46
+   ],
+   [
+    "langchain_neo4j",
+    43
+   ]
+  ],
+  "old_package": [
+   [
+    "langchain",
+    8003
+   ],
+   [
+    "langchain_community",
+    917
+   ],
+   [
+    "langchain_core",
+    220
+   ],
+   [
+    "langserve",
+    15
+   ]
+  ],
+  "dup_old": 0,
+  "has_alternative": 492,
+  "import_errors_sample": [
+   [
+    "",
+    642
+   ],
+   [
+    "ModuleNotFoundError: No module named 'langchain_google_commu",
+    94
+   ],
+   [
+    "ModuleNotFoundError: No module named 'langchain_unstructured",
+    63
+   ],
+   [
+    "ModuleNotFoundError: No module named 'langchain_neo4j'",
+    43
+   ],
+   [
+    "ModuleNotFoundError: No module named 'langchain_aws'",
+    42
+   ]
+  ]
+ },
+ "chunks": {
+  "count": 11903,
+  "fields": [
+   "chars",
+   "chunk_id",
+   "doc_section",
+   "era",
+   "group",
+   "has_code",
+   "import_status",
+   "imports",
+   "kind",
+   "new",
+   "old",
+   "packages",
+   "path",
+   "section",
+   "seen_in",
+   "source",
+   "text",
+   "title",
+   "url"
+  ],
+  "source": {
+   "import_map": {
+    "n": 9155,
+    "median_chars": 169,
+    "max": 433,
+    "min": 88
+   },
+   "latest_docs": {
+    "n": 2689,
+    "median_chars": 902,
+    "max": 7846,
+    "min": 325
+   },
+   "migration_guide": {
+    "n": 59,
+    "median_chars": 3144,
+    "max": 8062,
+    "min": 415
+   }
+  },
+  "era": [
+   [
+    "1.x",
+    11844
+   ],
+   [
+    "0.3",
+    59
+   ]
+  ],
+  "has_code": [
+   [
+    false,
+    10038
+   ],
+   [
+    true,
+    1865
+   ]
+  ],
+  "chars_median": 181,
+  "chars_p90": 1048,
+  "chars_max": 8062,
+  "tiny_lt80": 0,
+  "huge_gt4000": 69,
+  "dup_texts": 7,
+  "has_url": 2748,
+  "has_evidence_like_id": 11903,
+  "sample_doc_chunk": {
+   "chunk_id": "doc-3ca58c499d43",
+   "source": "latest_docs",
+   "era": "1.x",
+   "text": "Errors\n\nThis page contains guides around resolving common errors you may find while building with LangChain and LangGraph.\n\nErrors referenced below will have an `lc_error_code` property corresponding ",
+   "url": "https://docs.langchain.com/oss/python/common-errors",
+   "path": "oss/python/common-errors",
+   "title": "Errors",
+   "section": "",
+   "imports": [],
+   "packages": [],
+   "has_code": false,
+   "chars": 1630,
+   "doc_section": "Python / Reference / Reference"
+  }
+ },
+ "chroma": {
+  "tables": 21,
+  "collections": [
+   [
+    "langchain_migration",
+    1536
+   ]
+  ],
+  "embeddings": 11903,
+  "meta_keys": [
+   [
+    "text_hash",
+    11903
+   ],
+   [
+    "source",
+    11903
+   ],
+   [
+    "packages",
+    11903
+   ],
+   [
+    "imports",
+    11903
+   ],
+   [
+    "has_code",
+    11903
+   ],
+   [
+    "era",
+    11903
+   ],
+   [
+    "chroma:document",
+    11903
+   ],
+   [
+    "chars",
+    11903
+   ],
+   [
+    "seen_in",
+    9155
+   ],
+   [
+    "old",
+    9155
+   ],
+   [
+    "kind",
+    9155
+   ],
+   [
+    "new",
+    8513
+   ],
+   [
+    "import_status",
+    8513
+   ],
+   [
+    "url",
+    2748
+   ],
+   [
+    "title",
+    2748
+   ],
+   [
+    "section",
+    2748
+   ],
+   [
+    "path",
+    2748
+   ],
+   [
+    "doc_section",
+    2689
+   ],
+   [
+    "group",
+    59
+   ]
+  ]
+ },
+ "testset": {
+  "kinds": 57,
+  "occurrences": 114,
+  "covered_kinds": 55,
+  "covered_occ": 108,
+  "agree": 26,
+  "differ": [
+   [
+    "langchain.vectorstores.Chroma",
+    "langchain_chroma.Chroma",
+    "native",
+    [
+     "langchain_community.vectorstores"
+    ]
+   ],
+   [
+    "langchain.chains.LLMChain",
+    "langchain_classic.chains.LLMChain",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.chains.ConversationChain",
+    "langchain_classic.chains.ConversationChain",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.memory.ConversationBufferMemory",
+    "langchain_classic.memory.ConversationBufferMemory",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.chains.SimpleSequentialChain",
+    "langchain_classic.chains.SimpleSequentialChain",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.chains.RetrievalQA",
+    "langchain_classic.chains.RetrievalQA",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.chains.ConversationalRetrievalChain",
+    "langchain_classic.chains.ConversationalRetrievalChain",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.chains.summarize.load_summarize_chain",
+    "langchain_classic.chains.summarize.load_summarize_chain",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.output_parsers.StructuredOutputParser",
+    "langchain_classic.output_parsers.StructuredOutputParser",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.output_parsers.ResponseSchema",
+    "langchain_classic.output_parsers.ResponseSchema",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.chains.router.MultiPromptChain",
+    "langchain_classic.chains.router.MultiPromptChain",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.chains.SequentialChain",
+    "langchain_classic.chains.SequentialChain",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.chains.question_answering.load_qa_chain",
+    "langchain_classic.chains.question_answering.load_qa_chain",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.agents.initialize_agent",
+    "langchain_classic.agents.initialize_agent",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.agents.AgentType",
+    "langchain_classic.agents.AgentType",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.agents.Tool",
+    "langchain_core.tools.Tool",
+    "native",
+    []
+   ],
+   [
+    "langchain.agents.AgentExecutor",
+    "langchain_classic.agents.AgentExecutor",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.agents.create_openai_functions_agent",
+    "langchain_classic.agents.create_openai_functions_agent",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.agents.load_tools",
+    "langchain_community.agent_toolkits.load_tools.load_tools",
+    "native",
+    []
+   ],
+   [
+    "langchain.agents.create_react_agent",
+    "langchain_classic.agents.create_react_agent",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.agents.create_tool_calling_agent",
+    "langchain_classic.agents.create_tool_calling_agent",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.agents.create_sql_agent",
+    "langchain_community.agent_toolkits.create_sql_agent",
+    "native",
+    []
+   ],
+   [
+    "langchain.memory.ConversationBufferWindowMemory",
+    "langchain_classic.memory.ConversationBufferWindowMemory",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.agents.ZeroShotAgent",
+    "langchain_classic.agents.ZeroShotAgent",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.agents.agent_toolkits.create_retriever_tool",
+    "langchain_core.tools.retriever.create_retriever_tool",
+    "native",
+    [
+     "langchain_core.tools"
+    ]
+   ],
+   [
+    "langchain.agents.agent_toolkits.create_conversational_retrieval_agent",
+    "langchain_classic.agents.agent_toolkits.create_conversational_retrieval_agent",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.agents.format_scratchpad.format_to_openai_function_messages",
+    "langchain_classic.agents.format_scratchpad.format_to_openai_function_messages",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.agents.output_parsers.OpenAIFunctionsAgentOutputParser",
+    "langchain_classic.agents.output_parsers.OpenAIFunctionsAgentOutputParser",
+    "classic_fallback",
+    []
+   ],
+   [
+    "langchain.tools.render.format_tool_to_openai_function",
+    "langchain_community.tools.convert_to_openai.format_tool_to_openai_function",
+    "native",
+    []
+   ]
+  ],
+  "classic_or_other": [
+   [
+    "langchain.retrievers.EnsembleRetriever",
+    "langchain_classic.retrievers.EnsembleRetriever",
+    "classic_fallback"
+   ],
+   [
+    "langchain.chains.LLMChain",
+    "langchain_classic.chains.LLMChain",
+    "classic_fallback"
+   ],
+   [
+    "langchain.chains.ConversationChain",
+    "langchain_classic.chains.ConversationChain",
+    "classic_fallback"
+   ],
+   [
+    "langchain.memory.ConversationBufferMemory",
+    "langchain_classic.memory.ConversationBufferMemory",
+    "classic_fallback"
+   ],
+   [
+    "langchain.chains.SimpleSequentialChain",
+    "langchain_classic.chains.SimpleSequentialChain",
+    "classic_fallback"
+   ],
+   [
+    "langchain.chains.RetrievalQA",
+    "langchain_classic.chains.RetrievalQA",
+    "classic_fallback"
+   ],
+   [
+    "langchain.chains.ConversationalRetrievalChain",
+    "langchain_classic.chains.ConversationalRetrievalChain",
+    "classic_fallback"
+   ],
+   [
+    "langchain.chains.summarize.load_summarize_chain",
+    "langchain_classic.chains.summarize.load_summarize_chain",
+    "classic_fallback"
+   ],
+   [
+    "langchain.output_parsers.StructuredOutputParser",
+    "langchain_classic.output_parsers.StructuredOutputParser",
+    "classic_fallback"
+   ],
+   [
+    "langchain.output_parsers.ResponseSchema",
+    "langchain_classic.output_parsers.ResponseSchema",
+    "classic_fallback"
+   ],
+   [
+    "langchain.chains.router.MultiPromptChain",
+    "langchain_classic.chains.router.MultiPromptChain",
+    "classic_fallback"
+   ],
+   [
+    "langchain.chains.SequentialChain",
+    "langchain_classic.chains.SequentialChain",
+    "classic_fallback"
+   ],
+   [
+    "langchain.chains.question_answering.load_qa_chain",
+    "langchain_classic.chains.question_answering.load_qa_chain",
+    "classic_fallback"
+   ],
+   [
+    "langchain.agents.initialize_agent",
+    "langchain_classic.agents.initialize_agent",
+    "classic_fallback"
+   ],
+   [
+    "langchain.agents.AgentType",
+    "langchain_classic.agents.AgentType",
+    "classic_fallback"
+   ],
+   [
+    "langchain.agents.AgentExecutor",
+    "langchain_classic.agents.AgentExecutor",
+    "classic_fallback"
+   ],
+   [
+    "langchain.agents.create_openai_functions_agent",
+    "langchain_classic.agents.create_openai_functions_agent",
+    "classic_fallback"
+   ],
+   [
+    "langchain.agents.create_react_agent",
+    "langchain_classic.agents.create_react_agent",
+    "classic_fallback"
+   ],
+   [
+    "langchain.agents.create_tool_calling_agent",
+    "langchain_classic.agents.create_tool_calling_agent",
+    "classic_fallback"
+   ],
+   [
+    "langchain.memory.ConversationBufferWindowMemory",
+    "langchain_classic.memory.ConversationBufferWindowMemory",
+    "classic_fallback"
+   ],
+   [
+    "langchain.agents.ZeroShotAgent",
+    "langchain_classic.agents.ZeroShotAgent",
+    "classic_fallback"
+   ],
+   [
+    "langchain.agents.agent_toolkits.create_conversational_retrieval_agent",
+    "langchain_classic.agents.agent_toolkits.create_conversational_retrieval_agent",
+    "classic_fallback"
+   ],
+   [
+    "langchain.agents.format_scratchpad.format_to_openai_function_messages",
+    "langchain_classic.agents.format_scratchpad.format_to_openai_function_messages",
+    "classic_fallback"
+   ],
+   [
+    "langchain.agents.output_parsers.OpenAIFunctionsAgentOutputParser",
+    "langchain_classic.agents.output_parsers.OpenAIFunctionsAgentOutputParser",
+    "classic_fallback"
+   ]
+  ],
+  "missing": [
+   [
+    "langchain.tools.tool",
+    4
+   ],
+   [
+    "langchain.hub",
+    2
+   ]
+  ],
+  "by_difficulty": {
+   "easy": {
+    "items": 10,
+    "all_symbols_covered": 10
+   },
+   "medium": {
+    "items": 10,
+    "all_symbols_covered": 10
+   },
+   "hard": {
+    "items": 10,
+    "all_symbols_covered": 6
+   }
+  }
+ },
+ "guide_coverage": {
+  "LLMChain": true,
+  "ConversationChain": true,
+  "RetrievalQA": true,
+  "ConversationalRetrievalChain": true,
+  "ConversationBufferMemory": true,
+  "initialize_agent / AgentExecutor": true,
+  "MultiPromptChain": true,
+  "LLMRouterChain": true,
+  "MapReduce": true
+ }
+}
