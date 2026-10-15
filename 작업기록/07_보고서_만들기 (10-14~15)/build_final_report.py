@@ -38,7 +38,10 @@ text = MERMAID.sub(lambda m: (lambda n: f"![그림 {n}](diagram_{n}.png)")(next(
 
 # 2. 이미지 경로
 for img in IMG_DIR.glob("*"):
-    shutil.copy(img, OUT / img.name)
+    if img.is_dir():
+        shutil.copytree(img, OUT / img.name, dirs_exist_ok=True)   # docs/images/화면_기록 등
+    else:
+        shutil.copy(img, OUT / img.name)
 text = text.replace("](images/", "](")
 
 # 3. 목차 링크는 PDF에서 쓸모없으니 글자만
@@ -62,6 +65,7 @@ th { background: #ECEBE5; } tr { page-break-inside: avoid; }
 code { font-family: Consolas, monospace; font-size: 8.6pt; background: #F1F2F4; padding: 0 3px; border-radius: 3px; }
 pre { background: #14202E; color: #E8ECF1; padding: 10px; border-radius: 6px; white-space: pre-wrap; font-size: 8.4pt; line-height: 1.45; page-break-inside: avoid; }
 pre code { background: none; color: inherit; padding: 0; }
+td img { max-width: 260px; max-height: 170px; margin: 2px 0; }
 img { max-width: 100%; max-height: 165mm; display: block; margin: 8px auto; page-break-inside: avoid; }
 img[src='diagram_3.png'] { max-width: 50%; }
 hr { display: none; }
