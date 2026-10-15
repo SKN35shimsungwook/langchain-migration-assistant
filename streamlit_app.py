@@ -43,6 +43,13 @@ st.set_page_config(page_title="Langration · LangChain 마이그레이션 어시
 
 APP_NAME = "Langration"
 APP_DESC = "LangChain 버전 마이그레이션 코드 어시스턴트"   # 이름 아래 작은 글씨
+WELCOME = """안녕하세요, **Langration**입니다! 👋
+
+옛 LangChain 코드를 붙여 넣으면 원하는 버전에 맞게 고쳐 드리고, 바꾼 이유와 근거, 검사 결과까지 함께 보여 드려요.
+
+- 바꿀 버전은 글로 적어 주세요 (예: "1.x로 바꿔 줘", "0.2로 되돌려 줘"). 적지 않으면 최신 버전으로 바꿔요.
+- LangChain 버전 변화가 궁금하면 그냥 물어보셔도 돼요.
+- 처음이라면 왼쪽 **확인용 예제**를 눌러 보세요."""
 AUTO = "자동 감지"
 KIND_LABEL = {"native": "최신 위치", "moved": "위치 이동", "same": "그대로", "classic_fallback": "옛 창고(classic)",
               "unresolved": "못 찾음", "deprecated": "옛 메서드", "removed": "없어진 메서드", "exists": "그대로"}
@@ -346,7 +353,7 @@ def handle(text: str, status=None) -> None:
     def on_step(done: str, nxt: str, details=()) -> None:
         if status is not None:
             show_step(done, details)
-            status.update(label=nxt, expanded=True)      # 제목만 바꾸면 상자가 접혀 세부 내용이 안 보임
+            status.update(label=f"Langration이 생각 중입니다… · {nxt}", expanded=True)   # 제목만 바꾸면 상자가 접혀 세부 내용이 안 보임
 
     code = extract_code(text)
     result, steps, seconds, graph_error = None, [], None, None
@@ -410,7 +417,7 @@ def chat_screen() -> None:
         with box:
             if not ss["messages"]:
                 with st.chat_message("assistant"):
-                    st.write("옛 LangChain 코드를 붙여 넣거나, LangChain 버전 변화에 대해 물어보세요.")
+                    st.markdown(WELCOME)
             last_bot = max((i for i, m in enumerate(ss["messages"]) if m["role"] == "assistant"), default=-1)
             for i, m in enumerate(ss["messages"]):
                 with st.chat_message(m["role"]):
@@ -434,9 +441,9 @@ def chat_screen() -> None:
                 with st.chat_message("user"):
                     st.markdown(as_markdown(text))
                 with st.chat_message("assistant"):
-                    with st.status("질문 종류를 파악하는 중", expanded=True) as status:
+                    with st.status("Langration이 생각 중입니다…", expanded=True) as status:
                         handle(text, status)
-                        status.update(label="완료 · 처리 과정은 답 위에 남겨 둬요", state="complete", expanded=True)
+                        status.update(label="답변을 정리했어요 · 처리 과정은 답 위에 남겨 둬요", state="complete", expanded=True)
                         time.sleep(0.2)
             st.rerun()
     with result_col:
